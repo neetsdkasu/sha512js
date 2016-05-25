@@ -131,6 +131,15 @@ function SHA512JS() {
 			}
 			return s;
 		};
+		
+		this.copyBytes = function(v, dest, offset) {
+			var i, j = offset;
+			for (i = LEN - 1; i >= 0; i--) {
+				dest[j]     = v[i] >> 8; // BITLEN(16)
+				dest[j + 1] = v[i] &  0xFF;
+				j += 2;
+			}
+		};
 	};
 	
 	this.getInt64 = function() { return Int64; };

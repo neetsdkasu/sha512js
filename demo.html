@@ -25,6 +25,13 @@
 			console.log(int64.toHex(val3));
 			console.log(int64.toHex(val4));
 			console.log(int64.toHex(int64.rotateR(val3, 32)));
+			
+			var val5 = int64.parse('FF0102031005060A');
+			var arr = new Array(8);
+			int64.copyBytes(val5, arr, 0);
+			console.log(int64.toHex(val5));
+			console.log(arr);
+			
 		</script>
 	</body>
 </html>
