@@ -181,7 +181,6 @@ function SHA512JS() {
 	
 	this.getInt64 = function() { return Int64; };
 	
-	
 	var _init_hash_value = [
 		Int64.parse('6a09e667f3bcc908'),
 		Int64.parse('bb67ae8584caa73b'),
@@ -229,6 +228,7 @@ function SHA512JS() {
 		x.f = hash[5];
 		x.g = hash[6];
 		x.h = hash[7];
+		x.size = 0;
 	};
 	
 	var __Ch = function(x, y, z) {
@@ -297,11 +297,48 @@ function SHA512JS() {
 		for (j = 16; j < 80; j++) {
 			w[j] = Int64.add4(__lcSigma1(w[j - 2]), w[j - 7], __lcSigma0(w[j - 15]), w[j - 16]);
 		}
+		return w;
 	};
 	
 	var __update = function(x, data, offset) {
-		
-		__calcWj(x, data, offset);
+		var w = __calcWj(x, data, offset);
+		var a = x.a;
+		var b = x.b;
+		var c = x.c;
+		var d = x.d;
+		var e = x.e;
+		var f = x.f;
+		var g = x.g;
+		var h = x.h;
+		var j, t1, t2;
+		for (j = 0; j < 80; j++) {
+			t1 = Int64.add5(h, __ucSigma1(e), __Ch(e, f, g), _K[j], w[j]);
+			t2 = Int64.add(__ucSigma0(a), __Maj(a, b, b));
+			h = g;
+			g = f;
+			f = e;
+			e = Int64.add(d, t1);
+			d = c;
+			c = b;
+			b = a;
+			a = Int64.add(t1, t2);
+		}
+		x.a = a;
+		x.b = b;
+		x.c = c;
+		x.d = d;
+		x.e = e;
+		x.f = f;
+		x.g = g;
+		x.h = h;
+		x.hash[0] = Int64.add(x.hash[0], a);
+		x.hash[1] = Int64.add(x.hash[1], b);
+		x.hash[2] = Int64.add(x.hash[2], c);
+		x.hash[3] = Int64.add(x.hash[3], d);
+		x.hash[4] = Int64.add(x.hash[4], e);
+		x.hash[5] = Int64.add(x.hash[5], f);
+		x.hash[6] = Int64.add(x.hash[6], g);
+		x.hash[7] = Int64.add(x.hash[7], h);
 	};
 	
 	this.update = __update;
