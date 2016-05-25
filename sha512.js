@@ -234,11 +234,8 @@ function SHA512JS() {
 	
 	this.init = __init_hash;
 	
-	var __update = function(x, data, offset) {
-		var j;
-		
-		// calc Wj
-		var w = x.w;
+	var __calcWj = function(x, data, offset) {
+		var j, w = x.w;
 		for (j = 0; j < 16; j++) {
 			w[j] = data[offset + j];
 		}
@@ -252,7 +249,11 @@ function SHA512JS() {
 						w[j - 16]
 				)));
 		}
+	};
+	
+	var __update = function(x, data, offset) {
 		
+		__calcWj(x, data, offset);
 	};
 	
 	this.update = __update;
