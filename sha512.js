@@ -162,6 +162,29 @@ function SHA512JS() {
 		Int64.parse('5be0cd19137e2179')
 	];
 	
+	var _K = [
+		Int64.parse('428a2f98d728ae22'), Int64.parse('7137449123ef65cd'), Int64.parse('b5c0fbcfec4d3b2f'), Int64.parse('e9b5dba58189dbbc'),
+		Int64.parse('3956c25bf348b538'), Int64.parse('59f111f1b605d019'), Int64.parse('923f82a4af194f9b'), Int64.parse('ab1c5ed5da6d8118'),
+		Int64.parse('d807aa98a3030242'), Int64.parse('12835b0145706fbe'), Int64.parse('243185be4ee4b28c'), Int64.parse('550c7dc3d5ffb4e2'),
+		Int64.parse('72be5d74f27b896f'), Int64.parse('80deb1fe3b1696b1'), Int64.parse('9bdc06a725c71235'), Int64.parse('c19bf174cf692694'),
+		Int64.parse('e49b69c19ef14ad2'), Int64.parse('efbe4786384f25e3'), Int64.parse('0fc19dc68b8cd5b5'), Int64.parse('240ca1cc77ac9c65'),
+		Int64.parse('2de92c6f592b0275'), Int64.parse('4a7484aa6ea6e483'), Int64.parse('5cb0a9dcbd41fbd4'), Int64.parse('76f988da831153b5'),
+		Int64.parse('983e5152ee66dfab'), Int64.parse('a831c66d2db43210'), Int64.parse('b00327c898fb213f'), Int64.parse('bf597fc7beef0ee4'),
+		Int64.parse('c6e00bf33da88fc2'), Int64.parse('d5a79147930aa725'), Int64.parse('06ca6351e003826f'), Int64.parse('142929670a0e6e70'),
+		Int64.parse('27b70a8546d22ffc'), Int64.parse('2e1b21385c26c926'), Int64.parse('4d2c6dfc5ac42aed'), Int64.parse('53380d139d95b3df'),
+		Int64.parse('650a73548baf63de'), Int64.parse('766a0abb3c77b2a8'), Int64.parse('81c2c92e47edaee6'), Int64.parse('92722c851482353b'),
+		Int64.parse('a2bfe8a14cf10364'), Int64.parse('a81a664bbc423001'), Int64.parse('c24b8b70d0f89791'), Int64.parse('c76c51a30654be30'),
+		Int64.parse('d192e819d6ef5218'), Int64.parse('d69906245565a910'), Int64.parse('f40e35855771202a'), Int64.parse('106aa07032bbd1b8'),
+		Int64.parse('19a4c116b8d2d0c8'), Int64.parse('1e376c085141ab53'), Int64.parse('2748774cdf8eeb99'), Int64.parse('34b0bcb5e19b48a8'),
+		Int64.parse('391c0cb3c5c95a63'), Int64.parse('4ed8aa4ae3418acb'), Int64.parse('5b9cca4f7763e373'), Int64.parse('682e6ff3d6b2b8a3'),
+		Int64.parse('748f82ee5defb2fc'), Int64.parse('78a5636f43172f60'), Int64.parse('84c87814a1f0ab72'), Int64.parse('8cc702081a6439ec'),
+		Int64.parse('90befffa23631e28'), Int64.parse('a4506cebde82bde9'), Int64.parse('bef9a3f7b2c67915'), Int64.parse('c67178f2e372532b'),
+		Int64.parse('ca273eceea26619c'), Int64.parse('d186b8c721c0c207'), Int64.parse('eada7dd6cde0eb1e'), Int64.parse('f57d4f7fee6ed178'),
+		Int64.parse('06f067aa72176fba'), Int64.parse('0a637dc5a2c898a6'), Int64.parse('113f9804bef90dae'), Int64.parse('1b710b35131c471b'),
+		Int64.parse('28db77f523047d84'), Int64.parse('32caab7b40c72493'), Int64.parse('3c9ebe0a15c9bebc'), Int64.parse('431d67c49c100d4c'),
+		Int64.parse('4cc5d4becb3e42b6'), Int64.parse('597f299cfc657e2a'), Int64.parse('5fcb6fab3ad6faec'), Int64.parse('6c44198c4a475817')
+	];
+	
 	var __init_hash = function(x) {
 		var i, hash = x.hash;
 		for (i = 0; i < 8; i++) {
