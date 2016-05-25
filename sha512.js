@@ -8,8 +8,8 @@ function SHA512JS() {
 	
 	var Int64 = new function() {
 		
-		var SIZE = 9;
-		var LEN = 8;
+		var SIZE = 5;
+		var LEN = 4;
 		var BITLEN = 16;
 		var MASK = 0xFFFF;
 		
