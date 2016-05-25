@@ -56,10 +56,41 @@ function SHA512JS() {
 			return v;
 		};
 		
+		this.add4 = function(v1, v2, v3, v4) {
+			var i, v = new Array(SIZE), t = 0;
+			for (i = 0; i < LEN; i++) {
+				t += v1[i] + v2[i] + v3[i] + v4[i];
+				v[i] = t & MASK;
+				t >>= BITLEN;
+			}
+			v[LEN] = 0;
+			return v;
+		};
+		
+		this.add5 = function(v1, v2, v3, v4, v5) {
+			var i, v = new Array(SIZE), t = 0;
+			for (i = 0; i < LEN; i++) {
+				t += v1[i] + v2[i] + v3[i] + v4[i] + v5[i];
+				v[i] = t & MASK;
+				t >>= BITLEN;
+			}
+			v[LEN] = 0;
+			return v;
+		};
+		
 		this.bwXor = function(v1, v2) {
 			var i, v = new Array(SIZE);
 			for (i = 0; i < LEN; i++) {
 				v[i] = v1[i] ^ v2[i];
+			}
+			v[LEN] = 0;
+			return v;
+		};
+		
+		this.bwXor3 = function(v1, v2, v3) {
+			var i, v = new Array(SIZE);
+			for (i = 0; i < LEN; i++) {
+				v[i] = v1[i] ^ v2[i] ^ v3[i];
 			}
 			v[LEN] = 0;
 			return v;
@@ -204,52 +235,47 @@ function SHA512JS() {
 		return Int64.bwXor(
 			Int64.bwAnd(x, y),
 			Int64.bwAnd(Int64.bwNot(x), z)
-			);
+		);
 	};
 	
 	var __Maj = function(x, y, z) {
-		return Int64.bwXor(
+		return Int64.bwXor3(
 			Int64.bwAnd(x, y),
-			Int64.bwXor(
-				Int64.bwAnd(x, z),
-				Int64.bwAnd(y, z)
-			));
+			Int64.bwAnd(x, z),
+			Int64.bwAnd(y, z)
+		);
 	};
 	
 	var __ucSigma0 = function(x) {
-		return Int64.bwXor(
+		return Int64.bwXor3(
 			Int64.shiftR(x, 28),
-			Int64.bwXor(
-				Int64.shiftR(x, 34),
-				Int64.shiftR(x, 39)
-			));
+			Int64.shiftR(x, 34),
+			Int64.shiftR(x, 39)
+		);
 	};
 	
 	var __ucSigma1 = function(x) {
-		return Int64.bwXor(
+		return Int64.bwXor3(
 			Int64.shiftR(x, 14),
-			Int64.bwXor(
-				Int64.shiftR(x, 18),
-				Int64.shiftR(x, 41)
-			));
+			Int64.shiftR(x, 18),
+			Int64.shiftR(x, 41)
+		);
 	};
 	
 	var __lcSigma0 = function(x) {
-		return Int64.bwXor(
+		return Int64.bwXor3(
 			Int64.shiftR(x, 1),
-			Int64.bwXor(
-				Int64.shiftR(x, 8),
-				Int64.rotateR(x, 7)
-			));
+			Int64.shiftR(x, 8),
+			Int64.rotateR(x, 7)
+		);
 	};
 	
 	var __lcSigma1 = function(x) {
-		return Int64.bwXor(
+		return Int64.bwXor3(
 			Int64.shiftR(x, 19),
-			Int64.bwXor(
-				Int64.shiftR(x, 61),
-				Int64.rotateR(x, 6)
-			));
+			Int64.shiftR(x, 61),
+			Int64.rotateR(x, 6)
+		);
 	};
 	
 	this.create = function() {
@@ -269,14 +295,7 @@ function SHA512JS() {
 			w[j] = data[offset + j];
 		}
 		for (j = 16; j < 80; j++) {
-			w[j] = Int64.add(
-				__lcSigma1(w[j - 2]),
-				Int64.add(
-					w[j - 7],
-					Int64.add(
-						__lcSigma0(w[j - 15]),
-						w[j - 16]
-				)));
+			w[j] = Int64.add4(__lcSigma1(w[j - 2]), w[j - 7], __lcSigma0(w[j - 15]), w[j - 16]);
 		}
 	};
 	
