@@ -156,12 +156,19 @@ function SHA512JS() {
 		Int64.parse('5be0cd19137e2179')
 	];
 	
-	var __init_hash = function(a) {
-		var i;
+	var __init_hash = function(x) {
+		var i, hash = x.hash;
 		for (i = 0; i < 8; i++) {
-			a[i] = _init_hash_value[i]
+			hash[i] = _init_hash_value[i]
 		}
-		return a;
+		x.a = hash[0];
+		x.b = hash[1];
+		x.c = hash[2];
+		x.d = hash[3];
+		x.e = hash[4];
+		x.f = hash[5];
+		x.g = hash[6];
+		x.h = hash[7];
 	};
 	
 	var __Ch = function(x, y, z) {
@@ -216,37 +223,33 @@ function SHA512JS() {
 			));
 	};
 	
-	var _hash = new Array(8);
-	var _a, _b, _c, _d, _e, _f, _g, _h;
-	var _w = new Array(80);
-	
-	this.init = function() {
-		__init_hash(_hash);
-		_a = _hash[0];
-		_b = _hash[1];
-		_c = _hash[2];
-		_d = _hash[3];
-		_e = _hash[4];
-		_f = _hash[5];
-		_g = _hash[6];
-		_h = _hash[7];
+	this.create = function() {
+		var x = {
+			"hash": new Array(8),
+			"w": new Array(80)
+		};
+		__init_hash(x);
+		return x;
 	};
 	
-	var __update = function(data, offset) {
+	this.init = __init_hash;
+	
+	var __update = function(x, data, offset) {
 		var j;
 		
 		// calc Wj
+		var w = x.w;
 		for (j = 0; j < 16; j++) {
-			_w[j] = data[offset + j];
+			w[j] = data[offset + j];
 		}
 		for (j = 16; j < 80; j++) {
-			_w[j] = Int64.add(
-				__lcSigma1(_w[j - 2]),
+			w[j] = Int64.add(
+				__lcSigma1(w[j - 2]),
 				Int64.add(
-					_w[j - 7],
+					w[j - 7],
 					Int64.add(
-						__lcSigma0(_w[j - 15]),
-						_w[j - 16]
+						__lcSigma0(w[j - 15]),
+						w[j - 16]
 				)));
 		}
 		
@@ -254,11 +257,11 @@ function SHA512JS() {
 	
 	this.update = __update;
 	
-	this.getHash = function(dest, offset) {
+	this.getHash = function(x, dest, offset) {
 		// ByteArray
 		var i;
 		for (i = 0; i < 8; i++) {
-			Int64.copyBytes(_hash[i], dest, offset + i * 8);
+			Int64.copyBytes(x.hash[i], dest, offset + i * 8);
 		}
 	};
 }
