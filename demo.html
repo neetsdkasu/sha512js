@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Demo SHA512</title>
+	</head>
+	<body>
+		
+		<div id="div1"></div>
+		
+		<script type="text/javascript" src="./sha512.js"></script>
+		<script type="text/javascript">
+			
+			var sha512 = new SHA512JS();
+			var int64 = sha512.getInt64();
+			
+			var val1 = int64.valueOf(0x0F23F234);
+			var val2 = int64.valueOf(0x7F384111);
+			var val3 = int64.add(val1, val1);
+			var val4 = int64.parse('A13ABCD1234');
+			var i;
+			for (i = 0; i < 9; i++) val3 = int64.add(val3, val3);
+			val3 = int64.bwNot(val3);
+			console.log(int64.toHex(val1));
+			console.log(int64.toHex(val2));
+			console.log(int64.toHex(val3));
+			console.log(int64.toHex(val4));
+			console.log(int64.toHex(int64.rotateR(val3, 32)));
+		</script>
+	</body>
+</html>
