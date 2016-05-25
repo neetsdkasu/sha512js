@@ -6,12 +6,16 @@
 
 function SHA512JS() {
 	
-	var Int64 = new function() {
-		
-		var SIZE = 5;
-		var LEN = 4;
+	function IntClass(sz) {
+		// sz ... byte size (i.e. sz = 8 -> 64bit Int)
 		var BITLEN = 16;
 		var MASK = 0xFFFF;
+		
+		var INTBITS = sz << 3;
+		var SHIFTMASK = INTBITS - 1;
+		var LEN = INTBITS >> 4;
+		var SIZE = LEN + 1;
+		var ROTMASK = LEN - 1;
 		
 		this.valueOf = function(n) {
 			// n: Number(Integer)
@@ -27,7 +31,7 @@ function SHA512JS() {
 			// s: Hex String
 			var i, v = new Array(SIZE), j;
 			i = 0;
-			for (j = s.length - 4; j >= 0 && i < LEN; j -= 4) {
+			for (j = s.length - 4; j >= 0 && i < LEN; j -= 4) { // BITLEN(16) -> 4 Hex-characters
 				v[i] = parseInt('0x' + s.substring(j, j + 4));
 				i++;
 			}
@@ -90,7 +94,7 @@ function SHA512JS() {
 		
 		this.shiftR = function(v1, s) {
 			var i, v = new Array(SIZE), k, m, p;
-			k = (s & 63) >> 4; // div BITLEN(16)
+			k = (s & SHIFTMASK) >> 4; // div BITLEN(16)
 			for (i = 0; i + k < LEN; i++) {
 				v[i] = v1[i + k];
 			}
@@ -106,9 +110,9 @@ function SHA512JS() {
 		
 		this.rotateR = function(v1, r) {
 			var i, v = new Array(SIZE), k, m, p;
-			k = (r & 63) >> 4; // div BITLEN(16)
+			k = (r & SHIFTMASK) >> 4; // div BITLEN(16)
 			for (i = 0; i < LEN; i++) {
-				v[i] = v1[(i + k) & 3]; // % LEN(4)
+				v[i] = v1[(i + k) & ROTMASK];
 			}
 			r &= MASK;
 			m = (1 << r) - 1;  // mask
@@ -135,12 +139,14 @@ function SHA512JS() {
 		this.copyBytes = function(v, dest, offset) {
 			var i, j = offset;
 			for (i = LEN - 1; i >= 0; i--) {
-				dest[j]     = v[i] >> 8; // BITLEN(16)
+				dest[j]     = v[i] >> 8; // BITLEN(16) -> 2 bytes
 				dest[j + 1] = v[i] &  0xFF;
 				j += 2;
 			}
 		};
 	};
+	
+	var Int64 = new IntClass(8);
 	
 	this.getInt64 = function() { return Int64; };
 	
