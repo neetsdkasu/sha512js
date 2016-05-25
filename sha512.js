@@ -108,7 +108,7 @@ function SHA512JS() {
 			var i, v = new Array(SIZE), k, m, p;
 			k = (r & 63) >> 4; // div BITLEN(16)
 			for (i = 0; i < LEN; i++) {
-				v[i] = v1[(i + k) & 7]; // % LEN(8)
+				v[i] = v1[(i + k) & 3]; // % LEN(4)
 			}
 			r &= MASK;
 			m = (1 << r) - 1;  // mask
