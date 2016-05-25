@@ -6,7 +6,7 @@
 
 function SHA512JS() {
 	
-	function Int64() {
+	var Int64 = new function() {
 		
 		var SIZE = 9;
 		var LEN = 8;
@@ -131,8 +131,8 @@ function SHA512JS() {
 			}
 			return s;
 		};
-	}
+	};
 	
-	this.getInt64 = function() { return new Int64(); };
+	this.getInt64 = function() { return Int64; };
 	
 }
