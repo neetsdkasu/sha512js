@@ -144,4 +144,121 @@ function SHA512JS() {
 	
 	this.getInt64 = function() { return Int64; };
 	
+	
+	var _init_hash_value = [
+		Int64.parse('6a09e667f3bcc908'),
+		Int64.parse('bb67ae8584caa73b'),
+		Int64.parse('3c6ef372fe94f82b'),
+		Int64.parse('a54ff53a5f1d36f1'),
+		Int64.parse('510e527fade682d1'),
+		Int64.parse('9b05688c2b3e6c1f'),
+		Int64.parse('1f83d9abfb41bd6b'),
+		Int64.parse('5be0cd19137e2179')
+	];
+	
+	var __init_hash = function(a) {
+		var i;
+		for (i = 0; i < 8; i++) {
+			a[i] = _init_hash_value[i]
+		}
+		return a;
+	};
+	
+	var __Ch = function(x, y, z) {
+		return Int64.bwXor(
+			Int64.bwAnd(x, y),
+			Int64.bwAnd(Int64.bwNot(x), z)
+			);
+	};
+	
+	var __Maj = function(x, y, z) {
+		return Int64.bwXor(
+			Int64.bwAnd(x, y),
+			Int64.bwXor(
+				Int64.bwAnd(x, z),
+				Int64.bwAnd(y, z)
+			));
+	};
+	
+	var __ucSigma0 = function(x) {
+		return Int64.bwXor(
+			Int64.shiftR(x, 28),
+			Int64.bwXor(
+				Int64.shiftR(x, 34),
+				Int64.shiftR(x, 39)
+			));
+	};
+	
+	var __ucSigma1 = function(x) {
+		return Int64.bwXor(
+			Int64.shiftR(x, 14),
+			Int64.bwXor(
+				Int64.shiftR(x, 18),
+				Int64.shiftR(x, 41)
+			));
+	};
+	
+	var __lcSigma0 = function(x) {
+		return Int64.bwXor(
+			Int64.shiftR(x, 1),
+			Int64.bwXor(
+				Int64.shiftR(x, 8),
+				Int64.rotateR(x, 7)
+			));
+	};
+	
+	var __lcSigma1 = function(x) {
+		return Int64.bwXor(
+			Int64.shiftR(x, 19),
+			Int64.bwXor(
+				Int64.shiftR(x, 61),
+				Int64.rotateR(x, 6)
+			));
+	};
+	
+	var _hash = new Array(8);
+	var _a, _b, _c, _d, _e, _f, _g, _h;
+	var _w = new Array(80);
+	
+	this.init = function() {
+		__init_hash(_hash);
+		_a = _hash[0];
+		_b = _hash[1];
+		_c = _hash[2];
+		_d = _hash[3];
+		_e = _hash[4];
+		_f = _hash[5];
+		_g = _hash[6];
+		_h = _hash[7];
+	};
+	
+	var __update = function(data, offset) {
+		var j;
+		
+		// calc Wj
+		for (j = 0; j < 16; j++) {
+			_w[j] = data[offset + j];
+		}
+		for (j = 16; j < 80; j++) {
+			_w[j] = Int64.add(
+				__lcSigma1(_w[j - 2]),
+				Int64.add(
+					_w[j - 7],
+					Int64.add(
+						__lcSigma0(_w[j - 15]),
+						_w[j - 16]
+				)));
+		}
+		
+	};
+	
+	this.update = __update;
+	
+	this.getHash = function(dest, offset) {
+		// ByteArray
+		var i;
+		for (i = 0; i < 8; i++) {
+			Int64.copyBytes(_hash[i], dest, offset + i * 8);
+		}
+	};
 }
