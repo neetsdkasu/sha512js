@@ -289,19 +289,16 @@ function SHA512JS() {
 	
 	this.init = __init_hash;
 	
-	var __calcWj = function(x, data, offset) {
+	var __calcWj = function(x) {
 		var j, w = x.w;
-		for (j = 0; j < 16; j++) {
-			w[j] = data[offset + j];
-		}
 		for (j = 16; j < 80; j++) {
 			w[j] = Int64.add4(__lcSigma1(w[j - 2]), w[j - 7], __lcSigma0(w[j - 15]), w[j - 16]);
 		}
 		return w;
 	};
 	
-	var __update = function(x, data, offset) {
-		var w = __calcWj(x, data, offset);
+	var __compress = function(x) {
+		var w = __calcWj(x);
 		var a = x.a;
 		var b = x.b;
 		var c = x.c;
@@ -341,7 +338,14 @@ function SHA512JS() {
 		x.hash[7] = Int64.add(x.hash[7], h);
 	};
 	
+	var __update = function(x, data, offset, size) {
+		
+	};
+	
 	this.update = __update;
+	
+	this.finish = function() {
+	};
 	
 	this.getHash = function(x, dest, offset) {
 		// ByteArray
