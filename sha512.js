@@ -447,7 +447,7 @@ function SHA512JS() {
 	
 	var __tryCompress = function(p, x) {
 		if ((p & 63) !== 0) { return false; }
-		x.w[(p >> 63) - 1] = Packer.getCopy(x.packer);
+		x.w[(p >> 6) - 1] = Packer.getCopy(x.packer);
 		Packer.init(x.packer);
 		if (p !== 1024) { return false; }
 		__compress(x);
