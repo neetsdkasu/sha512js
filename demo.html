@@ -46,6 +46,23 @@
 			
 			console.log(int64.toHex(int64.ZERO));
 			
+			var hash = sha512.create();
+			var data = 'abc';
+			sha512.updateByByteString(hash, data);
+			sha512.finish(hash);
+			var hash_b = new Array(64);
+			sha512.getHash(hash, hash_b, 0);
+			console.log(hash_b);
+			var c, hash_s = '';
+			for (i = 0; i < 64; i++) {
+				c = hash_b[i].toString(16);
+				hash_s += c.length < 2 ? '0' + c : c;
+				if (i == 31) {
+					hash_s += '\n';
+				}
+			}
+			console.log(hash_s);
+			
 		</script>
 	</body>
 </html>
