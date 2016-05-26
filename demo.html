@@ -32,6 +32,19 @@
 			console.log(int64.toHex(val5));
 			console.log(arr);
 			
+			var packer = int64.getPacker();
+			var pval = packer.create();
+			packer.init(pval);
+			for (i = 0; i < 4; i++) {
+				packer.push(pval, (0x12345678 >> ((3 - i) << 3)) & 0xFF);
+			}
+			for (i = 0; i < 4; i++) {
+				packer.push(pval, (0xABCDEF01 >> ((3 - i) << 3)) & 0xFF);
+			}
+			var val6 = packer.getCopy(pval);
+			console.log(int64.toHex(val6));
+			
+			
 		</script>
 	</body>
 </html>
