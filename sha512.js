@@ -178,9 +178,50 @@ function SHA512JS() {
 				j += 2;
 			}
 		};
+		
+		var packer = new function () {
+			var v = new Array(LEN);
+			var p = 0;
+			
+			this.create = function() {
+				return {
+					"v": new Array(Len),
+					"p": 0
+				};
+			};
+			
+			this.init = function(vp) {
+				var i;
+				for (i = 0; i < LEN; i++) {
+					vp.v[i] = 0;
+				}
+				vp.p = BYTESIZE;
+			};
+			
+			this.push = function(vp, x) {
+				if (vp.p > 0) {
+					vp.p--;
+					vp.v[vp.p >> 1] |= (x & 0xFF) << ((vp.p & 1) << 3); // BITLEN(16)
+				}
+			};
+			
+			this.getCopy = function(vp) {
+				var i, r = new Array(SIZE);
+				for (i = 0; i < LEN; i++) {
+					r[i] = vp.v[i]
+				}
+				r[LEN] = 0;
+				return r;
+			};
+		}
+		
+		this.getPacker = function() {
+			return packer;
+		};
 	};
 	
 	var Int64 = new IntClass(8);
+	var Packer = Int64.getPacker();
 	
 	this.getInt64 = function() { return Int64; };
 	
@@ -232,6 +273,7 @@ function SHA512JS() {
 		x.g = hash[6];
 		x.h = hash[7];
 		x.size = 0;
+		Packer.init(x.packer);
 	};
 	
 	var __Ch = function(x, y, z) {
@@ -283,8 +325,9 @@ function SHA512JS() {
 	
 	this.create = function() {
 		var x = {
-			"hash": new Array(8),
-			"w": new Array(80)
+			"hash"  : new Array(8),
+			"w"     : new Array(80),
+			"packer": Packer.create()
 		};
 		__init_hash(x);
 		return x;
