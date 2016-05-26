@@ -491,7 +491,32 @@ function SHA512JS() {
 		__update(x, x.n_iter);
 	};
 	
-	this.finish = function() {
+	this.finish = function(x) {
+		var p = x.size & 1023;
+		Packer.push(x.packer, 0x80); // end of message
+		p += 8;
+		if (__tryCompress(p, x)) {
+			p = 0;
+		}
+		if (p >= 896) {
+			// need to compress this block
+			do {
+				Packer.push(x.packer, 0x00);
+				p += 8;
+			} while (__tryCompress(p, x));
+			p = 0;
+		}
+		while (p < 896) {
+			Packer.push(x.packer, 0x00);
+			p += 8;
+			__tryCompress(p, x);
+		}
+		// 128bits (message bits)
+		x.w[14] = Int64.ZERO; // I think ... maybe, allmost, message bits < 2^64
+		x.w[15] = Int64.valueOf(x.size);
+		
+		// final compress
+		__compress(x);
 	};
 	
 	this.getHash = function(x, dest, offset) {
