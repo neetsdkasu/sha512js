@@ -180,8 +180,6 @@ function SHA512JS() {
 		};
 		
 		var packer = new function () {
-			var v = new Array(LEN);
-			var p = 0;
 			
 			this.create = function() {
 				return {
