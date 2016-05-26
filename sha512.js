@@ -183,7 +183,7 @@ function SHA512JS() {
 			
 			this.create = function() {
 				return {
-					"v": new Array(Len),
+					"v": new Array(LEN),
 					"p": 0
 				};
 			};
