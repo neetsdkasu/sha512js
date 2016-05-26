@@ -20,6 +20,14 @@ function SHA512JS() {
 		var SIZE = LEN + 1;      // count of units with a unit for carry
 		var ROTMASK = LEN - 1;   // unit index mask for rotation
 		
+		this.ZERO = (function() {
+			var i, v = new Array(SIZE);
+			for (i = 0; i < SIZE; i++) {
+				v[i] = 0;
+			}
+			return v;
+		})();
+		
 		this.valueOf = function(n) {
 			// n: Number(Integer)
 			var i, v = new Array(SIZE);
