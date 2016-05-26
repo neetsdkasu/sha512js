@@ -8,15 +8,17 @@ function SHA512JS() {
 	
 	function IntClass(sz) {
 		//  sz: byte size (i.e. sz = 8 -> 64bit Int)
-		var BITLEN = 16;
-		var MASK = 0xFFFF;
+		//      require sz == pow(2,x) (x >= 1)
 		
-		var BYTESIZE = sz;
-		var INTBITS = BYTESIZE << 3;
-		var SHIFTMASK = INTBITS - 1;
-		var LEN = INTBITS >> 4;
-		var SIZE = LEN + 1;
-		var ROTMASK = LEN - 1;
+		var BITLEN = 16;   // bit length of a unit
+		var MASK = 0xFFFF; // bit mask of a unit
+		
+		var BYTESIZE = sz; // byte size of Integer
+		var INTBITS = BYTESIZE << 3; // bit size of Integer
+		var SHIFTMASK = INTBITS - 1; // shifter mask for bitwise shift
+		var LEN = INTBITS >> 4;  // count of units for Integer
+		var SIZE = LEN + 1;      // count of units with a unit for carry
+		var ROTMASK = LEN - 1;   // unit index mask for rotation
 		
 		this.valueOf = function(n) {
 			// n: Number(Integer)
