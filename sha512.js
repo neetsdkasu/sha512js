@@ -445,21 +445,23 @@ function SHA512JS() {
 		x.hash[7] = Int64.add(x.hash[7], h);
 	};
 	
+	var __tryCompress = function(p, x) {
+		if ((p & 63) !== 0) { return false; }
+		x.w[(p >> 63) - 1] = Packer.getCopy(x.packer);
+		Packer.init(x.packer);
+		if (p !== 1024) { return false; }
+		__compress(x);
+		return true;
+	};
+	
 	var __update = function(x, iter) {
 		var p = x.size & 1023;
-		var packer = x.packer;
 		var b;
 		while (iter.hasNext()) {
-			b = iter.next();
-			Packer.push(packer, b);
+			Packer.push(x.packer, iter.next());
 			p += 8;
-			if ((p & 63) === 0) {
-				x.w[(p >> 63) - 1] = Packer.getCopy(packer);
-				Packer.init(packer);
-				if (p === 1024) {
-					p = 0;
-					__compress(x);
-				}
+			if (__tryCompress(p, x)) {
+				p = 0;
 			}
 		}
 		x.size += iter.size() << 3; // bytes to bits
