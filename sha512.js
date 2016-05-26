@@ -218,6 +218,58 @@ function SHA512JS() {
 		};
 	};
 	
+	var EMPTYITER = new function() {
+		this.hasNext = function() { return false; };
+		this.next = function() { throw 'EMPTYITER: No item!'; };
+		this.size = function() { return 0; };
+	};
+	
+	function ByteArrayByteIterator() {
+		var _arr = [];
+		var _idx = 0;
+		var _iend = 0;
+		var _size = 0;
+		this.hasNext = function() { return _idx < _iend; };
+		this.next = function() { return _arr[_idx++]; };
+		this.size = function() { return _size; };
+		this.init = function(data, offset, len) {
+			_arr = data; _idx = offset; _iend = offset + len; _size = len;
+		};
+	}
+	
+	function ByteStringByteIterator() {
+		var _str ='';
+		var _idx = 0;
+		var _iend = 0;
+		this.hasNext = function() { return _idx < _iend; };
+		this.next = function() { return _str.charCodeAt(_idx++) & 0xFF; };
+		this.size = function() { return _size; };
+		this.init = function(str, offset, len) {
+			_str = str; _idx = offset; _iend = offset + len; _size = len;
+		};
+	}
+	
+	function NumberArrayByteIterator() { // 32bits number
+		var _arr = [];
+		var _idx = 0;
+		var _iend = 0;
+		var _size = 0;
+		var _mask = 0;
+		var _shift = 0;
+		var _i;
+		this.hasNext = function() { return _idx < _iend; };
+		this.next = function() {
+			_i = _mask - (_idx & _mask);
+			return (_arr[(_idx++) >> _shift] >> _i) & 0xFF;
+		};
+		this.size = function() { return _size; }
+		this.init = function(data, offset, len, bits) {
+			// bits: Integer bits (16 or 32 or 64 ... any pow(2,x))
+			_mask = bits - 1; _shift = (bits >> 3) - 1;
+			_arr = data; _idx = offset << _shift; _iend = (offset + len) << _shift;
+		};
+	}
+	
 	var Int64 = new IntClass(8);
 	var Packer = Int64.getPacker();
 	
@@ -325,7 +377,10 @@ function SHA512JS() {
 		var x = {
 			"hash"  : new Array(8),
 			"w"     : new Array(80),
-			"packer": Packer.create()
+			"packer": Packer.create(),
+			"b_iter": EMPTYITER,
+			"s_iter": EMPTYITER,
+			"n_iter": EMPTYITER
 		};
 		__init_hash(x);
 		return x;
@@ -382,11 +437,33 @@ function SHA512JS() {
 		x.hash[7] = Int64.add(x.hash[7], h);
 	};
 	
-	var __update = function(x, data, offset, size) {
+	var __update = function(x, iter) {
 		
 	};
 	
-	this.update = __update;
+	this.updateByByteArray = function(x, data, offset, len) {
+		if (x.b_iter === EMPTYITER) {
+			x.b_iter = new ByteArrayByteIterator();
+		}
+		x.b_iter.init(data, offset, len)
+		__update(x, x.b_iter);
+	};
+	
+	this.updateByByteString = function(x, s) {
+		if (x.s_iter === EMPTYITER) {
+			x.s_iter = new ByteStringByteIterator();
+		}
+		x.s_iter.init(s);
+		__update(x, x.s_iter);
+	};
+	
+	this.updateByNumberArray = function(x, data, offset, len, bits) {
+		if (x.n_iter === EMPTYITER) {
+			x.n_iter = new NumberArrayByteIterator();
+		}
+		x.n_iter.init(data, offset, len, bits);
+		__update(x, x.n_iter);
+	};
 	
 	this.finish = function() {
 	};
