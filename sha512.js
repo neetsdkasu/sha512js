@@ -438,7 +438,23 @@ function SHA512JS() {
 	};
 	
 	var __update = function(x, iter) {
-		
+		var p = x.size & 1023;
+		var packer = x.packer;
+		var b;
+		while (iter.hasNext()) {
+			b = iter.next();
+			Packer.push(packer, b);
+			p += 8;
+			if ((p & 63) === 0) {
+				x.w[(p >> 63) - 1] = Packer.getCopy(packer);
+				Packer.init(packer);
+				if (p === 1024) {
+					p = 0;
+					__compress(x);
+				}
+			}
+		}
+		x.size += iter.size() << 3; // bytes to bits
 	};
 	
 	this.updateByByteArray = function(x, data, offset, len) {
