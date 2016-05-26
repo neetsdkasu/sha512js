@@ -7,11 +7,12 @@
 function SHA512JS() {
 	
 	function IntClass(sz) {
-		// sz ... byte size (i.e. sz = 8 -> 64bit Int)
+		//  sz: byte size (i.e. sz = 8 -> 64bit Int)
 		var BITLEN = 16;
 		var MASK = 0xFFFF;
 		
-		var INTBITS = sz << 3;
+		var BYTESIZE = sz;
+		var INTBITS = BYTESIZE << 3;
 		var SHIFTMASK = INTBITS - 1;
 		var LEN = INTBITS >> 4;
 		var SIZE = LEN + 1;
