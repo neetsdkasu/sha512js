@@ -57,6 +57,16 @@ function SHA512JS() {
 			return v;
 		};
 		
+		this.equals = function(v1, v2) {
+			var i;
+			for (i = 0; i < LEN; i++) {
+				if (v1[i] !== v2[i]) {
+					return false;
+				}
+			}
+			return true;
+		};
+		
 		this.add = function(v1, v2) {
 			var i, v = new Array(SIZE), t = 0;
 			for (i = 0; i < LEN; i++) {
