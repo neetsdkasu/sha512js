@@ -32,10 +32,11 @@ function SHA512JS() {
 		this.valueOf = function(n) {
 			// n: Number(Integer)
 			var i, v = new Array(SIZE);
-			for (i = 0; i < SIZE; i++) {
+			for (i = 0; i < LEN; i++) {
 				v[i] = n & MASK;
-				n >>= BITLEN;
+				n >>= BITLEN;  // shift right n as 32bits singed integer on javascript
 			}
+			v[LEN] = 0;
 			return v;
 		};
 		
