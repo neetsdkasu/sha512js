@@ -8,60 +8,18 @@
 		<div id="div1"></div>
 		
 		<script type="text/javascript" src="./sha512.js"></script>
+		<script type="text/javascript" src="./test_sha512.js"></script>
 		<script type="text/javascript">
 			
-			var sha512 = new SHA512JS();
-			var int64 = sha512.getInt64();
+			// Test_SHA512JS.skip(true);
 			
-			var val1 = int64.valueOf(0x0F23F234);
-			var val2 = int64.valueOf(0x7F384111);
-			var val3 = int64.add(val1, val1);
-			var val4 = int64.parse('A13ABCD1234');
-			var i;
-			for (i = 0; i < 9; i++) val3 = int64.add(val3, val3);
-			val3 = int64.bwNot(val3);
-			console.log(int64.toHex(val1));
-			console.log(int64.toHex(val2));
-			console.log(int64.toHex(val3));
-			console.log(int64.toHex(val4));
-			console.log(int64.toHex(int64.rotateR(val3, 32)));
+			// Test_SHA512JS.test_int64_parse();
+			// Test_SHA512JS.test_int64_toHex();
+			// Test_SHA512JS.test_int64_equals();
+			// Test_SHA512JS.test_int64_valueOf();
+			Test_SHA512JS.test_int64_add();
 			
-			var val5 = int64.parse('FF0102031005060A');
-			var arr = new Array(8);
-			int64.copyBytes(val5, arr, 0);
-			console.log(int64.toHex(val5));
-			console.log(arr);
-			
-			var packer = int64.getPacker();
-			var pval = packer.create();
-			packer.init(pval);
-			for (i = 0; i < 4; i++) {
-				packer.push(pval, (0x12345678 >> ((3 - i) << 3)) & 0xFF);
-			}
-			for (i = 0; i < 4; i++) {
-				packer.push(pval, (0xABCDEF01 >> ((3 - i) << 3)) & 0xFF);
-			}
-			var val6 = packer.getCopy(pval);
-			console.log(int64.toHex(val6));
-			
-			console.log(int64.toHex(int64.ZERO));
-			
-			var hash = sha512.create();
-			var data = 'abc';
-			sha512.updateByByteString(hash, data, 0, data.length);
-			sha512.finish(hash);
-			var hash_b = new Array(64);
-			sha512.getHash(hash, hash_b, 0);
-			console.log(hash_b);
-			var c, hash_s = '';
-			for (i = 0; i < 64; i++) {
-				c = hash_b[i].toString(16);
-				hash_s += c.length < 2 ? '0' + c : c;
-				if (i == 31) {
-					hash_s += '\n';
-				}
-			}
-			console.log(hash_s);
+			// Test_SHA512JS.testAll();
 			
 		</script>
 	</body>
