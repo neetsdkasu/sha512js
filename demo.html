@@ -48,7 +48,7 @@
 			
 			var hash = sha512.create();
 			var data = 'abc';
-			sha512.updateByByteString(hash, data);
+			sha512.updateByByteString(hash, data, 0, data.length);
 			sha512.finish(hash);
 			var hash_b = new Array(64);
 			sha512.getHash(hash, hash_b, 0);

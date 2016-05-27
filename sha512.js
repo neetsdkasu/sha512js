@@ -475,11 +475,11 @@ function SHA512JS() {
 		__update(x, x.b_iter);
 	};
 	
-	this.updateByByteString = function(x, s) {
+	this.updateByByteString = function(x, s, offset, len) {
 		if (x.s_iter === EMPTYITER) {
 			x.s_iter = new ByteStringByteIterator();
 		}
-		x.s_iter.init(s);
+		x.s_iter.init(s, offset, len);
 		__update(x, x.s_iter);
 	};
 	
