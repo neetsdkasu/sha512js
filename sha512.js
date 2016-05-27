@@ -12,6 +12,7 @@ function SHA512JS() {
 		
 		var BITLEN = 16;   // bit length of a unit
 		var MASK = 0xFFFF; // bit mask of a unit
+		var UNITSHIFTMASK = BITLEN - 1; // shifter mask in a unit
 		
 		var BYTESIZE = sz; // byte size of Integer
 		var INTBITS = BYTESIZE << 3; // bit size of Integer
@@ -140,7 +141,7 @@ function SHA512JS() {
 			for (i = 0; i + k < LEN; i++) {
 				v[i] = v1[i + k];
 			}
-			s &= MASK;
+			s &= UNITSHIFTMASK;
 			m = (1 << s) - 1; // mask
 			p = BITLEN - s;   // shiftL
 			for (i = 0; i < LEN; i++) {
@@ -156,7 +157,7 @@ function SHA512JS() {
 			for (i = 0; i < LEN; i++) {
 				v[i] = v1[(i + k) & ROTMASK];
 			}
-			r &= MASK;
+			r &= UNITSHIFTMASK;
 			m = (1 << r) - 1;  // mask
 			p = BITLEN - r;    // shiftL
 			v[LEN] = v[0] & m; // lowest bits
