@@ -12,18 +12,13 @@
 		<script type="text/javascript" src="./test_sha512.js"></script>
 		<script type="text/javascript">
 			
-			// Test_SHA512JS.skip(true);
+			Test_SHA512JS.skip(true);
 			
-			// Test_SHA512JS.test_int64_parse();
-			// Test_SHA512JS.test_int64_toHex();
-			// Test_SHA512JS.test_int64_equals();
-			// Test_SHA512JS.test_int64_valueOf();
-			// Test_SHA512JS.test_int64_add();
-			Test_SHA512JS.test_int64_bwAnd();
-			Test_SHA512JS.test_int64_bwOr();
-			Test_SHA512JS.test_int64_bwXor();
-			
-			// Test_SHA512JS.testAll();
+			Test_SHA512JS.testAll(true, [
+				'int64_bwAnd',
+				'int64_bwOr',
+				'int64_bwXor'
+			]);
 			
 		</script>
 	</body>

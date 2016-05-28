@@ -19,6 +19,7 @@ var Test_SHA512JS = new function() {
 		var i; for (i in a1) { if (a1[i] !== a2[i]) { log('NG'); return 0; } } log('OK'); return 1;
 	};
 	var skip_flag = false;
+	var _skip = function(f) { skip_flag = f; }
 	var _require = function(a) {
 		if (skip_flag) { return true; }
 		var i, flag, func;
@@ -49,11 +50,28 @@ var Test_SHA512JS = new function() {
 		};
 	};
 	this.logging = _logging;
-	this.skip = function(f) { skip_flag = f; }
-	this.testAll = function() {
+	this.skip = _skip;
+	this.testAll = function(s, ls) {
 		log('TEST ALL -----------------------------------------');
-		var b = _require(test_list);
+		var i, b = true, func;
+		var tg = ls === undefined ? test_list : ls;
+		var ok = [], ng = [];
+		for (i in tg) {
+			func = self['test_' + tg[i]];
+			if (func(s === true)) {
+				ok.push(tg[i]);
+			} else {
+				b = false;
+				ng.push(tg[i]);
+			}
+		}
 		log('TEST ALL ' + (b ? 'OK' : 'NG') + ' --------------------------------------');
+		if (s === true) {
+			log('OK TESTS:');
+			log(ok);
+			log('NG TESTS:');
+			log(ng);
+		}
 	};
 	this.logfunc = (function() {
 		if (console) { if (console.log) {
