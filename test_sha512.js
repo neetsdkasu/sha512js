@@ -258,5 +258,117 @@ var Test_SHA512JS = new function() {
 			}
 		}
 		return ok === test_count;
-	});	
+	});
+	
+	// Int64 bwAnd
+	// -----------------------------------------------
+	makeTest('int64_bwAnd', ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+		var test_values = [
+			['0', '0', '0'],
+			['0', '1', '0'],
+			['1', '1', '1'],
+			['0', 'ffffffffffffffff', '0'],
+			['1000200030004000', 'ffffffffffffffff', '1000200030004000'],
+			['ffffffffffffffff', 'ffffffffffffffff', 'ffffffffffffffff']
+		];
+		var test_count = test_values.length;
+		var i, v, w1, w2, a, s1, s2, ok = 0;
+		for (i in test_values) {
+			log('case #' + i);
+			v = test_values[i];
+			w1 = int64.parse(v[0]);
+			w2 = int64.parse(v[1]);
+			a = int64.parse(v[2]);
+			s1 = int64.bwAnd(w1, w2);
+			log(v);
+			log(int64.toHex(w1));
+			log(int64.toHex(w2));
+			log(int64.toHex(s1));
+			ok += check(int64.equals(a, s1));
+			if (v[0] != v[1]) {
+				test_count++;
+				log('swap case');
+				s2 = int64.bwAnd(w2, w1);
+				log(int64.toHex(s2));
+				ok += check(int64.equals(a, s2));
+			}
+		}
+		return ok === test_count;
+	});
+	
+	// Int64 bwOr
+	// -----------------------------------------------
+	makeTest('int64_bwOr', ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+		var test_values = [
+			['0', '0', '0'],
+			['0', '1', '1'],
+			['1', '1', '1'],
+			['1000200030004000', '0', '1000200030004000'],
+			['0', 'ffffffffffffffff', 'ffffffffffffffff'],
+			['1000200030004000', 'ffffffffffffffff', 'ffffffffffffffff'],
+			['ffffffffffffffff', 'ffffffffffffffff', 'ffffffffffffffff']
+		];
+		var test_count = test_values.length;
+		var i, v, w1, w2, a, s1, s2, ok = 0;
+		for (i in test_values) {
+			log('case #' + i);
+			v = test_values[i];
+			w1 = int64.parse(v[0]);
+			w2 = int64.parse(v[1]);
+			a = int64.parse(v[2]);
+			s1 = int64.bwOr(w1, w2);
+			log(v);
+			log(int64.toHex(w1));
+			log(int64.toHex(w2));
+			log(int64.toHex(s1));
+			ok += check(int64.equals(a, s1));
+			if (v[0] != v[1]) {
+				test_count++;
+				log('swap case');
+				s2 = int64.bwOr(w2, w1);
+				log(int64.toHex(s2));
+				ok += check(int64.equals(a, s2));
+			}
+		}
+		return ok === test_count;
+	});
+	
+	// Int64 bwXor
+	// -----------------------------------------------
+	makeTest('int64_bwXor', ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+		var test_values = [
+			['0', '0', '0'],
+			['0', '1', '1'],
+			['1', '1', '0'],
+			['1000200030004000', '0', '1000200030004000'],
+			['0', 'ffffffffffffffff', 'ffffffffffffffff'],
+			['1000200030004000', 'ffffffffffffffff', 'efffdfffcfffbfff'],
+			['ffffffffffffffff', 'ffffffffffffffff', '0']
+		];
+		var test_count = test_values.length;
+		var i, v, w1, w2, a, s1, s2, ok = 0;
+		for (i in test_values) {
+			log('case #' + i);
+			v = test_values[i];
+			w1 = int64.parse(v[0]);
+			w2 = int64.parse(v[1]);
+			a = int64.parse(v[2]);
+			s1 = int64.bwXor(w1, w2);
+			log(v);
+			log(int64.toHex(w1));
+			log(int64.toHex(w2));
+			log(int64.toHex(s1));
+			ok += check(int64.equals(a, s1));
+			if (v[0] != v[1]) {
+				test_count++;
+				log('swap case');
+				s2 = int64.bwXor(w2, w1);
+				log(int64.toHex(s2));
+				ok += check(int64.equals(a, s2));
+			}
+		}
+		return ok === test_count;
+	});
+
+
 };
