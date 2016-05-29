@@ -1,108 +1,33 @@
-/* test SHA512JS
+/* IntClass Tester
  *
  * The MIT License (MIT)
  * Copyright (c) 2016 Leonardone @ NEETSDKASU
  */
 
 
-var Test_SHA512JS = new function() {
-
-	// test tools
-	// -----------------------------------------------
-	var self = this;
-	var test_list = [];
-	var logging_flag = true;
-	var _logging = function(f) { logging_flag = f; };
-	var log = function(x) { if (logging_flag) self['logfunc'](x); };
-	var check = function(b) { if (b) { log('OK'); return 1; } else { log('NG'); return 0; } };
-	var checkA = function(a1, a2) {
-		var i; for (i in a1) { if (a1[i] !== a2[i]) { log('NG'); return 0; } } log('OK'); return 1;
-	};
-	var skip_flag = false;
-	var _skip = function(f) { skip_flag = f; }
-	var _require = function(a) {
-		if (skip_flag) { return true; }
-		var i, flag, func;
-		for (i in a) {
-			flag = 'flag_' + a[i];
-			if (self[flag]) { continue; }
-			func = self['test_' + a[i]];
-			if (func(false) === false) {
-				return false;
-			}
-		}
-		return true;
-	};
-	var makeTest = function(test_name, test_req, test_func) {
-		test_list.push(test_name);
-		var flag = 'flag_' + test_name;
-		self[flag] = false;
-		self['test_' + test_name] = function(s) {
-			if (_require(test_req) === false) { return false; }
-			log(('TEST ' + test_name +'  ----------------------------------------------').substring(0, 50));
-			var r, bk = logging_flag;
-			_logging(s !== false);
-			r = test_func();
-			_logging(bk);
-			log('TEST ' + (r ? 'OK' : 'NG') +' ------------------------------------------');
-			self[flag] = r;
-			return r;
-		};
-	};
-	this.logging = _logging;
-	this.skip = _skip;
-	this.testAll = function(s, ls) {
-		log('TEST ALL -----------------------------------------');
-		var i, b = true, func;
-		var tg = ls === undefined ? test_list : ls;
-		var ok = [], ng = [];
-		for (i in tg) {
-			func = self['test_' + tg[i]];
-			if (func(s === true)) {
-				ok.push(tg[i]);
-			} else {
-				b = false;
-				ng.push(tg[i]);
-			}
-		}
-		log('TEST ALL ' + (b ? 'OK' : 'NG') + ' --------------------------------------');
-		if (s === true) {
-			log('OK TESTS:');
-			log(ok);
-			log('NG TESTS:');
-			log(ng);
-		}
-	};
-	this.logfunc = (function() {
-		if (console) { if (console.log) {
-			return function (x) { console.log(x); };
-		}}
-		if (document) {
-			return (function() {
-				var id = 'debuglog-test-sha512js';
-				var dbg = document.getElementById(id);
-				if (dbg === null) {
-					dbg = document.body.appendChild(document.createElement('div'));
-					dbg.id = id;
-				}
-				return function(x) {
-					dbg.appendChild(document.createTextNode(x))
-					   .parentNode
-					   .appendChild(document.createElement('br'));
-				};
-			})();
-		}
-		return function(x) { };
-	})();
+var IntClassTester = new function() {
+	
+	var T = new TesterUtilJS(this, 'IntClassTester');
+	var log = T.log;
 	
 	// -----------------------------------------------
-	var sha512 = new SHA512JS();
-	var int64  = sha512.getInt64();
-	var packer = int64.getPacker();
+	var IntClass = null, int64 = null;
+	
+	// -----------------------------------------------
+	T.setBindFunc(function(x) {
+		IntClass = x['IntClass'];
+	});
+	
+	// Int64 Constructor
+	// -----------------------------------------------
+	T.makeTest('int64_constructor', true, [], function() {
+		int64 = new IntClass(8);
+		return int64 !== null;
+	});
 	
 	// Int64 parse
 	// -----------------------------------------------
-	makeTest('int64_parse', [], function() {
+	T.makeTest('int64_parse', false, [], function() {
 		var test_values = [
 			['0', [0x0000, 0x0000, 0x0000, 0x0000, 0]],
 			['1', [0x0001, 0x0000, 0x0000, 0x0000, 0]],
@@ -124,14 +49,14 @@ var Test_SHA512JS = new function() {
 			w = int64.parse(v[0]);
 			log(v);
 			log(w);
-			ok += checkA(v[1], w);
+			ok += T.checkA(v[1], w);
 		}
 		return ok === test_count;
 	});
 	
 	// Int64 toHex
 	// -----------------------------------------------
-	makeTest('int64_toHex', ['int64_parse'], function() {
+	T.makeTest('int64_toHex', false, ['int64_parse'], function() {
 		var test_values = [
 			['0', '0000000000000000'],
 			['1', '0000000000000001'],
@@ -154,14 +79,14 @@ var Test_SHA512JS = new function() {
 			log(v);
 			log(w);
 			log(s);
-			ok += check(v[1] === s);
+			ok += T.check(v[1] === s);
 		}
 		return ok === test_count;
 	});
 	
 	// Int64 equals
 	// -----------------------------------------------
-	makeTest('int64_equals', ['int64_parse', 'int64_toHex'], function() {
+	T.makeTest('int64_equals', false, ['int64_parse', 'int64_toHex'], function() {
 		var test_values = [
 			['0', '0', true],
 			['0', '1', false],
@@ -192,13 +117,13 @@ var Test_SHA512JS = new function() {
 			log(int64.toHex(w1));
 			log(int64.toHex(w2));
 			log(s1);
-			ok += check(v[2] === s1);
+			ok += T.check(v[2] === s1);
 			if (v[0] != v[1]) {
 				test_count++;
 				log('swap case');
 				s2 = int64.equals(w2, w1);
 				log(s2);
-				ok += check(v[2] === s2);
+				ok += T.check(v[2] === s2);
 			}
 		}
 		return ok === test_count;
@@ -206,7 +131,7 @@ var Test_SHA512JS = new function() {
 	
 	// Int64 valueOf
 	// -----------------------------------------------
-	makeTest('int64_valueOf', ['int64_parse', 'int64_equals'], function() {
+	T.makeTest('int64_valueOf', false, ['int64_parse', 'int64_equals'], function() {
 		var test_values = [
 			[0x0, '0'],
 			[0x1, '1'],
@@ -226,14 +151,14 @@ var Test_SHA512JS = new function() {
 			log(v);
 			log(w1);
 			log(w2);
-			ok += check(int64.equals(w1, w2));
+			ok += T.check(int64.equals(w1, w2));
 		}
 		return ok === test_count;
 	});
 	
 	// Int64 add
 	// -----------------------------------------------
-	makeTest('int64_add', ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+	T.makeTest('int64_add', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
 		var test_values = [
 			['0', '0', '0'],
 			['0', '1', '1'],
@@ -266,13 +191,13 @@ var Test_SHA512JS = new function() {
 			log(int64.toHex(w1));
 			log(int64.toHex(w2));
 			log(int64.toHex(s1));
-			ok += check(int64.equals(a, s1));
+			ok += T.check(int64.equals(a, s1));
 			if (v[0] != v[1]) {
 				test_count++;
 				log('swap case');
 				s2 = int64.add(w2, w1);
 				log(int64.toHex(s2));
-				ok += check(int64.equals(a, s2));
+				ok += T.check(int64.equals(a, s2));
 			}
 		}
 		return ok === test_count;
@@ -280,7 +205,7 @@ var Test_SHA512JS = new function() {
 	
 	// Int64 bwAnd
 	// -----------------------------------------------
-	makeTest('int64_bwAnd', ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+	T.makeTest('int64_bwAnd', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
 		var test_values = [
 			['0', '0', '0'],
 			['0', '1', '0'],
@@ -302,13 +227,13 @@ var Test_SHA512JS = new function() {
 			log(int64.toHex(w1));
 			log(int64.toHex(w2));
 			log(int64.toHex(s1));
-			ok += check(int64.equals(a, s1));
+			ok += T.check(int64.equals(a, s1));
 			if (v[0] != v[1]) {
 				test_count++;
 				log('swap case');
 				s2 = int64.bwAnd(w2, w1);
 				log(int64.toHex(s2));
-				ok += check(int64.equals(a, s2));
+				ok += T.check(int64.equals(a, s2));
 			}
 		}
 		return ok === test_count;
@@ -316,7 +241,7 @@ var Test_SHA512JS = new function() {
 	
 	// Int64 bwOr
 	// -----------------------------------------------
-	makeTest('int64_bwOr', ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+	T.makeTest('int64_bwOr', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
 		var test_values = [
 			['0', '0', '0'],
 			['0', '1', '1'],
@@ -339,13 +264,13 @@ var Test_SHA512JS = new function() {
 			log(int64.toHex(w1));
 			log(int64.toHex(w2));
 			log(int64.toHex(s1));
-			ok += check(int64.equals(a, s1));
+			ok += T.check(int64.equals(a, s1));
 			if (v[0] != v[1]) {
 				test_count++;
 				log('swap case');
 				s2 = int64.bwOr(w2, w1);
 				log(int64.toHex(s2));
-				ok += check(int64.equals(a, s2));
+				ok += T.check(int64.equals(a, s2));
 			}
 		}
 		return ok === test_count;
@@ -353,7 +278,7 @@ var Test_SHA512JS = new function() {
 	
 	// Int64 bwXor
 	// -----------------------------------------------
-	makeTest('int64_bwXor', ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+	T.makeTest('int64_bwXor', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
 		var test_values = [
 			['0', '0', '0'],
 			['0', '1', '1'],
@@ -376,13 +301,13 @@ var Test_SHA512JS = new function() {
 			log(int64.toHex(w1));
 			log(int64.toHex(w2));
 			log(int64.toHex(s1));
-			ok += check(int64.equals(a, s1));
+			ok += T.check(int64.equals(a, s1));
 			if (v[0] != v[1]) {
 				test_count++;
 				log('swap case');
 				s2 = int64.bwXor(w2, w1);
 				log(int64.toHex(s2));
-				ok += check(int64.equals(a, s2));
+				ok += T.check(int64.equals(a, s2));
 			}
 		}
 		return ok === test_count;

@@ -8,13 +8,15 @@
 		
 		<div id="div1"></div>
 		
+		<script type="text/javascript" src="./testerutil.js"></script>
+		<script type="text/javascript" src="./intclass-tester.js"></script>
+		<script type="text/javascript" src="./sha512-tester.js"></script>
 		<script type="text/javascript" src="./sha512.js"></script>
-		<script type="text/javascript" src="./test_sha512.js"></script>
 		<script type="text/javascript">
 			
-			Test_SHA512JS.skip(true);
+			IntClassTester.setSkip(true);
 			
-			Test_SHA512JS.testAll(true, [
+			IntClassTester.testAll(false, [
 				'int64_bwAnd',
 				'int64_bwOr',
 				'int64_bwXor'

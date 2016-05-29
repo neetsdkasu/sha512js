@@ -4,7 +4,7 @@
  * Copyright (c) 2016 Leonardone @ NEETSDKASU
  */
 
-function SHA512JS() {
+var SHA512JS = new function() {
 	
 	function IntClass(sz) {
 		//  sz: byte size (i.e. sz = 8 -> 64bit Int)
@@ -60,7 +60,7 @@ function SHA512JS() {
 		
 		this.equals = function(v1, v2) {
 			var i;
-			for (i = 0; i < LEN; i++) {
+			for (i = 0; i < SIZE; i++) {
 				if (v1[i] !== v2[i]) {
 					return false;
 				}
@@ -538,4 +538,12 @@ function SHA512JS() {
 			Int64.copyBytes(x.hash[i], dest, offset + i * 8);
 		}
 	};
+	
+	// Tester
+	// =============================================
+	if (IntClassTester) {
+		IntClassTester.bind({
+			"IntClass": IntClass
+		});
+	}
 }
