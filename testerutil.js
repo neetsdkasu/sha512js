@@ -65,6 +65,7 @@ function TesterUtilJS(__tester, __tester_name) {
 			_must_requires_flag = true;
 			return;
 		}
+		_must_requires_flag = true;
 		var i, func, bk = _logging_flag;
 		if (_skip_flag) {
 			_setLogging(false);
@@ -73,6 +74,7 @@ function TesterUtilJS(__tester, __tester_name) {
 		for (i in _must_require_list) {
 			func = __tester[_funcName(_must_require_list[i])];
 			if (func(false) === false) {
+				_must_requires_flag = false;
 				_setLogging(true);
 				_log('ERROR REQUIRED TEST ' + _must_require_list[i]);
 				func(true);
@@ -80,7 +82,6 @@ function TesterUtilJS(__tester, __tester_name) {
 				throw 'failure reuired test! "' + _must_require_list[i] + '"';
 			}
 		}
-		_must_requires_flag = true;
 		_log(_withBar('MUST REQUIRES OK'));
 		_setLogging(bk);
 	};
