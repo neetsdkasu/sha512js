@@ -10,12 +10,11 @@ function TesterUtilJS(__tester, __tester_name) {
 	var _self = this;
 	
 	var _test_list = [];
-	var _must_require_list = [];
+	var _must_do_list = [];
 	
 	var _logging_flag = true;
 	var _skip_flag = false;
-	var _must_requires_flag = false;
-	var _must_require_show_flag = false;
+	var _must_do_flag = false;
 	
 	var _flagName = function(x) {
 		return 'flag_' + x;
@@ -57,32 +56,32 @@ function TesterUtilJS(__tester, __tester_name) {
 		return (x + ' --------------------------------------------------').substring(0, 50);
 	};
 	
-	var _testMustRequires = function() {
-		if (_must_requires_flag) {
+	var _testMustDo = function() {
+		if (_must_do_flag) {
 			return;
 		}
-		if (_must_require_list.length === 0) {
-			_must_requires_flag = true;
+		if (_must_do_list.length === 0) {
+			_must_do_flag = true;
 			return;
 		}
-		_must_requires_flag = true;
+		_must_do_flag = true;
 		var i, func, bk = _logging_flag;
 		if (_skip_flag) {
 			_setLogging(false);
 		}
-		_log(_withBar('MUST REQUIRES'));
-		for (i in _must_require_list) {
-			func = __tester[_funcName(_must_require_list[i])];
+		_log(_withBar('MUST DO TESTS'));
+		for (i in _must_do_list) {
+			func = __tester[_funcName(_must_do_list[i])];
 			if (func(false) === false) {
-				_must_requires_flag = false;
+				_must_do_flag = false;
 				_setLogging(true);
-				_log('ERROR REQUIRED TEST ' + _must_require_list[i]);
+				_log('ERROR REQUIRED TEST ' + _must_do_list[i]);
 				func(true);
 				_setLogging(bk);
-				throw 'failure reuired test! "' + _must_require_list[i] + '"';
+				throw 'failure reuired test! "' + _must_do_list[i] + '"';
 			}
 		}
-		_log(_withBar('MUST REQUIRES OK'));
+		_log(_withBar('MUST DO TESTS OK'));
 		_setLogging(bk);
 	};
 	
@@ -90,7 +89,7 @@ function TesterUtilJS(__tester, __tester_name) {
 		if (a.length === 0) {
 			return;
 		}
-		_testMustRequires();
+		_testMustDo();
 		if (_skip_flag) {
 			return;
 		}
@@ -117,7 +116,7 @@ function TesterUtilJS(__tester, __tester_name) {
 	var _makeTest = function(test_name, test_must, test_req, test_func) {
 		_test_list.push(test_name);
 		if (test_must) {
-			_must_require_list.push(test_name);
+			_must_do_list.push(test_name);
 		}
 		var flag_name = _flagName(test_name);
 		_self[flag_name] = false;
@@ -138,7 +137,7 @@ function TesterUtilJS(__tester, __tester_name) {
 	};
 	
 	var _testAll = function(s, ls) {
-		_testMustRequires();
+		_testMustDo();
 		_log(_withBar('TEST ALL'));
 		var i, b = true, func;
 		var tg = (ls === undefined || ls.length === 0) ? _test_list : ls;
