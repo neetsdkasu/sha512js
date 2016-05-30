@@ -152,9 +152,9 @@ function TesterUtilJS(__tester, __tester_name) {
 			}
 		}
 		_log(_withBar('TEST ALL ' + (b ? 'OK' : 'NG')));
-		if (s === true) {
-			_log('OK TESTS:');
-			_log(ok);
+		_log('OK TESTS:');
+		_log(ok);
+		if (b === false) {
 			_log('NG TESTS:');
 			_log(ng);
 		}
