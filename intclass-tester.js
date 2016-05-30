@@ -27,7 +27,7 @@ var IntClassTester = new function() {
 	
 	// Int64 parse
 	// -----------------------------------------------
-	T.makeTest('int64_parse', false, [], function() {
+	T.makeTest('int64_parse', false, ['int64_constructor'], function() {
 		var test_values = [
 			['0', [0x0000, 0x0000, 0x0000, 0x0000, 0]],
 			['1', [0x0001, 0x0000, 0x0000, 0x0000, 0]],
