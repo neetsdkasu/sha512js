@@ -159,6 +159,7 @@ var SHA512JS = new function() {
 				v[i] >>= s;
 				v[i] |= (v[i + 1] & m) << p;
 			}
+			v[LEN] = 0;
 			return v;
 		};
 		
