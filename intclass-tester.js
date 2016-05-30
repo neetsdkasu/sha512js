@@ -343,4 +343,49 @@ var IntClassTester = new function() {
 		return ok === test_count;
 	});
 	
+	// Int64 shiftR
+	// -----------------------------------------------
+	T.makeTest('int64_shiftR', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+		var shift_values = [0, 1, 10, 16, 18, 36, 47, 48, 49, 63, 64, 65, 81, 130, 200];
+		var test_values = [
+			['0', ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']],
+			['1', ['1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0']],
+			['f', ['f', '7', '0', '0', '0', '0', '0', '0', '0', '0', 'f', '7', '0', '3', '0']],
+			['10', ['10', '8', '0', '0', '0', '0', '0', '0', '0', '0', '10', '8', '0', '4', '0']],
+			['1000', ['1000', '800', '4', '0', '0', '0', '0', '0', '0', '0', '1000', '800', '0', '400', '10']],
+			['6789', ['6789', '33c4', '19', '0', '0', '0', '0', '0', '0', '0', '6789', '33c4', '0', '19e2', '67']],
+			['10000', ['10000', '8000', '40', '1', '0', '0', '0', '0', '0', '0', '10000', '8000', '0', '4000', '100']],
+			['fffff', ['fffff', '7ffff', '3ff', 'f', '3', '0', '0', '0', '0', '0', 'fffff', '7ffff', '7', '3ffff', 'fff']],
+			['abcd037b', ['abcd037b', '55e681bd', '2af340', 'abcd', '2af3', '0', '0', '0', '0', '0', 'abcd037b', '55e681bd', '55e6', '2af340de', 'abcd03']],
+			['100000000', ['100000000', '80000000', '400000', '10000', '4000', '0', '0', '0', '0', '0', '100000000', '80000000', '8000', '40000000', '1000000']],
+			['ffffffffff', ['ffffffffff', '7fffffffff', '3fffffff', 'ffffff', '3fffff', 'f', '0', '0', '0', '0', 'ffffffffff', '7fffffffff', '7fffff', '3fffffffff', 'ffffffff']],
+			['f1a4c99ed678', ['f1a4c99ed678', '78d264cf6b3c', '3c693267b5', 'f1a4c99e', '3c693267', 'f1a', '1', '0', '0', '0', 'f1a4c99ed678', '78d264cf6b3c', '78d264cf', '3c693267b59e', 'f1a4c99ed6']],
+			['1000000000000', ['1000000000000', '800000000000', '4000000000', '100000000', '40000000', '1000', '2', '1', '0', '0', '1000000000000', '800000000000', '80000000', '400000000000', '10000000000']],
+			['fffffffffffff', ['fffffffffffff', '7ffffffffffff', '3ffffffffff', 'fffffffff', '3ffffffff', 'ffff', '1f', 'f', '7', '0', 'fffffffffffff', '7ffffffffffff', '7ffffffff', '3ffffffffffff', 'fffffffffff']],
+			['8000000000000000', ['8000000000000000', '4000000000000000', '20000000000000', '800000000000', '200000000000', '8000000', '10000', '8000', '4000', '1', '8000000000000000', '4000000000000000', '400000000000', '2000000000000000', '80000000000000']],
+			['c9d20a1ef4771111', ['c9d20a1ef4771111', '64e9050f7a3b8888', '32748287bd1dc4', 'c9d20a1ef477', '32748287bd1d', 'c9d20a1', '193a4', 'c9d2', '64e9', '1', 'c9d20a1ef4771111', '64e9050f7a3b8888', '64e9050f7a3b', '32748287bd1dc444', 'c9d20a1ef47711']],
+			['ffffffffffffffff', ['ffffffffffffffff', '7fffffffffffffff', '3fffffffffffff', 'ffffffffffff', '3fffffffffff', 'fffffff', '1ffff', 'ffff', '7fff', '1', 'ffffffffffffffff', '7fffffffffffffff', '7fffffffffff', '3fffffffffffffff', 'ffffffffffffff']]
+		];
+		var test_count = test_values.length;
+		var i, j, v, w, u, ok = 0;
+		var s = new Array(shift_values.length);
+		var a = new Array(shift_values.length);
+		log('shift values');
+		log(shift_values);
+		for (i in test_values) {
+			log('case #' + i);
+			v = test_values[i];
+			w = int64.parse(v[0]);
+			u = v[1];
+			log(v);
+			log(int64.toHex(w));
+			for (j in shift_values) {
+				a[j] = int64.parse(u[j]);
+				s[j] = int64.shiftR(w, shift_values[j]);
+			}
+			ok += T.checkAfn(a, s, int64.equals);
+		}
+		return ok === test_count;
+	});
+	
 };
