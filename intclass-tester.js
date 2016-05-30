@@ -312,6 +312,35 @@ var IntClassTester = new function() {
 		}
 		return ok === test_count;
 	});
-
-
+	
+	// Int64 bwNot
+	// -----------------------------------------------
+	T.makeTest('int64_bwNot', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+		var test_values = [
+			['0', 'ffffffffffffffff'],
+			['1', 'fffffffffffffffe'],
+			['1000100010001000', 'efffefffefffefff'],
+			['123456789abcdef0', 'edcba9876543210f']
+		];
+		var test_count = test_values.length * 2;
+		var i, v, w, a, s1, s2, ok = 0;
+		for (i in test_values) {
+			log('case #' + i);
+			v = test_values[i];
+			w = int64.parse(v[0]);
+			a = int64.parse(v[1]);
+			s1 = int64.bwNot(w);
+			log(v);
+			log(int64.toHex(w));
+			log(int64.toHex(s1));
+			ok += T.check(int64.equals(a, s1));
+			log('swap case');
+			s2 = int64.bwNot(a);
+			log(int64.toHex(a));
+			log(int64.toHex(s2));
+			ok += T.check(int64.equals(w, s2));
+		}
+		return ok === test_count;
+	});
+	
 };
