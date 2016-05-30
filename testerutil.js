@@ -175,7 +175,11 @@ function TesterUtilJS(__tester, __tester_name) {
 		var i;
 		for (i in a1) {
 			if (a1[i] !== a2[i]) {
-				_log('NG'); return 0;
+				_log('NG');
+				_log('i = ' + i);
+				_log(a1[i]);
+				_log(a2[i]);
+				return 0;
 			}
 		}
 		_log('OK');
@@ -187,6 +191,9 @@ function TesterUtilJS(__tester, __tester_name) {
 		for (i in a1) {
 			if (cmpf(a1[i], a2[i]) === false) {
 				_log('NG');
+				_log('i = ' + i);
+				_log(a1[i]);
+				_log(a2[i]);
 				return 0;
 			}
 		}
