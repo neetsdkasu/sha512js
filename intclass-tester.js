@@ -21,8 +21,14 @@ var IntClassTester = new function() {
 	// Int64 Constructor
 	// -----------------------------------------------
 	T.makeTest('int64_constructor', true, [], function() {
+		var fields = [
+			'parse', 'toHex', 'equals', 'valueOf', 'add', 'bwAnd', 'bwOr', 'bwXor', 'bwNot',
+			'shiftR', 'rotateR', 'ZERO', 'add4', 'add5', 'bwXor3', 'copyBytes', 'getPacker'
+		];
 		int64 = new IntClass(8);
-		return int64 !== null;
+		log(fields);
+		var ok = T.checkKey(int64, fields);
+		return ok === 1;
 	});
 	
 	// Int64 parse
