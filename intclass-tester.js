@@ -433,4 +433,14 @@ var IntClassTester = new function() {
 		return ok === test_count;
 	});
 	
+	// int64 ZERO
+	// -----------------------------------------------
+	T.makeTest('int64_ZERO', false, ['int64_parse', 'int64_equals'], function() {
+		var a = int64.parse('0');
+		var z = int64.ZERO;
+		log(a);
+		log(z);
+		var ok = T.check(int64.equals(a, z));
+		return ok === 1;
+	});
 };
