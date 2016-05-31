@@ -201,6 +201,20 @@ function TesterUtilJS(__tester, __tester_name) {
 		return 1;
 	};
 	
+	var _checkKey = function(o, ks) {
+		var i;
+		for (i in ks) {
+			if (o[ks[i]]) {
+				continue;
+			}
+			_log('NG');
+			_log('not exist: ' + ks[i]);
+			return 0;
+		}
+		_log('OK');
+		return 1;
+	}
+	
 	var _setLogging = function(f) {
 		_logging_flag = f;
 	};
@@ -246,6 +260,7 @@ function TesterUtilJS(__tester, __tester_name) {
 	this.check       = __tester['check']       = _check;
 	this.checkA      = __tester['checkA']      = _checkA;
 	this.checkAfn    = __tester['checkAfn']    = _checkAfn;
+	this.checkKey    = __tester['checkKey']    = _checkKey;
 	this.setSkip     = __tester['setSkip']     = _setSkip;
 	this.setLogging  = __tester['setLogging']  = _setLogging;
 	this.setLogFunc  = __tester['setLogFunc']  = _setLogFunc;
