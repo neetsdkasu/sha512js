@@ -527,4 +527,49 @@ var IntClassTester = new function() {
 		}
 		return ok === test_count;
 	});
+	
+	// int64 bwXor3
+	// -----------------------------------------------
+	T.makeTest('int64_bwXor3', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+		var test_values = [
+			['0', '0', '0', '0'],
+			['1', '1', '1', '1'],
+			['0', '1', '1', '0'],
+			['1', '0', '1', '0'],
+			['1', '1', '0', '0'],
+			['1', '0', '0', '1'],
+			['0', '1', '0', '1'],
+			['0', '0', '1', '1'],
+			['7eea886edd535d48', '539e5d9f1dd13c85', 'a107cc2df4f0960f', '8c7319dc3472f7c2'],
+			['519a7f67139bb244', 'fc9f2c387b65a473', 'd604c3c32e5e946b', '7b01909c46a0825c'],
+			['d44188b269fd806f', '8d85fc907da799fd', '8adecc818918501d', 'd31ab8a39d42498f'],
+			['cd4ccf1168e381d8', 'c59288798697bab0', 'd42c65d0cf099f16', 'dcf222b8217da47e'],
+			['b5efdbe40110e341', 'ea9d35b89c5b3ccd', '3eefb844fdfd7314', '619d561860b6ac98'],
+			['58307ad3b25c59c8', 'cb0b5d47ccf52e', 'a368f70642efc2ef', 'fb938688b77f6e09'],
+			['502cb22950520252', 'c186f740dce73fe0', 'e9d980b7a1d8c973', '7873c5de2d6df4c1'],
+			['a7500d5d1718725a', 'ebda1aed337f19e7', 'b61dcb283df4018', '47ebcb02a7b82ba5'],
+			['b420866e21ed5508', '3f547b34d978c370', '808ac843fec2ee8a', 'bfe3519065778f2'],
+			['7f1f20ba42b8f322', '1f33cb331ca4ca81', 'a6370a8d48f40f96', 'c61be10416e83635'],
+			['2566ec9cb5e91809', 'c086086c08d34c9a', '4d571f6e7b796894', 'a8b7fb9ec6433c07'],
+			['7a96159502ef0f2e', 'f9f9e60d6a812661', '996b002415a51e77', '1a04f3bc7dcb3738'],
+			['fe47e16d9bc76c6', '3bc1832dfe465ab3', 'c79a4bff57dabe50', 'f3bfb6c470209225'],
+			['aa9b2cdfec9918dd', 'f46449f94fa8e8bc', 'b17d921daa6488f6', 'ef82f73b09557897']
+		];
+		var test_count = test_values.length;
+		var i, j, v, s, ok = 0;
+		var w = new Array(3);
+		for (i in test_values) {
+			v = test_values[i];
+			for (j = 0; j < 3; j++) {
+				w[j] = int64.parse(v[j]);
+			}
+			s = int64.bwXor3(w[0], w[1], w[2]);
+			a = int64.parse(v[3]);
+			log(v);
+			log(int64.toHex(s));
+			ok += T.check(int64.equals(a, s));
+		}
+		return ok === test_count;
+	});
+	
 };
