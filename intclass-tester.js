@@ -602,4 +602,181 @@ var IntClassTester = new function() {
 		}
 		return ok === test_count;
 	});
+	
+	// int64 getPacker
+	// -----------------------------------------------
+	T.makeTest('int64_getPacker', false, ['int64_constructor'], function() {
+		var fields = [
+			'create', 'init', 'push', 'getCopy'
+		];
+		log(fields);
+		var packer = int64.getPacker();
+		var ok = T.checkKey(packer, fields);
+		return ok === 1;
+	});
+	
+	// Packer create
+	// -----------------------------------------------
+	T.makeTest('packer_create', false, ['int64_getPacker'], function() {
+		var fields = ['v', 'p'];
+		var packer = int64.getPacker();
+		var pk = packer.create();
+		log(pk);
+		log('field check');
+		log(fields);
+		if (T.checkKey(pk, fields) === 0) {
+			return false;
+		}
+		log('field-v array?');
+		if (T.check(pk['v'] instanceof Array) === 0) {
+			log(pk['v']);
+			return false;
+		}
+		log('field-v length 4?');
+		if (T.check(pk['v'].length === 4) === 0) {
+			log(pk['v'].length);
+			return false;
+		}
+		log('field-p 0?');
+		if (T.check(pk['p'] === 0) === 0) {
+			log(pk['p']);
+			return false;
+		}
+		return true;
+	});
+	
+	// Packer init
+	// -----------------------------------------------
+	T.makeTest('packer_init', false, ['int64_getPacker', 'packer_create'], function() {
+		var packer = int64.getPacker();
+		var pk = packer.create();
+		log('first init when after create()');
+		log(pk);
+		log(pk.v);
+		packer.init(pk);
+		log(pk);
+		log(pk.v);
+		log('field-v all 0?');
+		if (T.checkA([0, 0, 0, 0], pk.v) === 0) {
+			log(pk.v);
+			return false;
+		}
+		log('field-p 8?');
+		if (T.check(pk.p === 8) === 0) {
+			log(pk.p);
+			return false;
+		}
+		log('init when some data');
+		var i;
+		for (i in pk.v) {
+			pk.v[i] = (i + 1) * (i + 2) * 3;
+		}
+		pk.p = 7;
+		log(pk);
+		log(pk.v);
+		packer.init(pk);
+		log(pk);
+		log(pk.v);
+		log('field-v all 0?');
+		if (T.checkA([0, 0, 0, 0], pk.v) === 0) {
+			log(pk.v);
+			return false;
+		}
+		log('field-p 8?');
+		if (T.check(pk.p === 8) === 0) {
+			log(pk.p);
+			return false;
+		}
+		return true;
+	});
+	
+	// Packer push
+	// -----------------------------------------------
+	T.makeTest('packer_push', false, ['int64_getPacker', 'packer_create', 'packer_init'], function() {
+		var test_values = [
+			[[0x19, 7, [0x0000, 0x0000, 0x0000, 0x1900]],
+			 [0x24, 6, [0x0000, 0x0000, 0x0000, 0x1924]],
+			 [0x3f, 5, [0x0000, 0x0000, 0x3f00, 0x1924]],
+			 [0x45, 4, [0x0000, 0x0000, 0x3f45, 0x1924]],
+			 [0x5c, 3, [0x0000, 0x5c00, 0x3f45, 0x1924]],
+			 [0x61, 2, [0x0000, 0x5c61, 0x3f45, 0x1924]],
+			 [0x77, 1, [0x7700, 0x5c61, 0x3f45, 0x1924]],
+			 [0x8a, 0, [0x778a, 0x5c61, 0x3f45, 0x1924]],
+			 [0x90, 0, [0x778a, 0x5c61, 0x3f45, 0x1924]],
+			 [0xa8, 0, [0x778a, 0x5c61, 0x3f45, 0x1924]]
+			 ],
+			[[0xf1, 7, [0x0000, 0x0000, 0x0000, 0xf100]],
+			 [0xee, 6, [0x0000, 0x0000, 0x0000, 0xf1ee]],
+			 [0xff, 5, [0x0000, 0x0000, 0xff00, 0xf1ee]],
+			 [0xdb, 4, [0x0000, 0x0000, 0xffdb, 0xf1ee]],
+			 [0xc9, 3, [0x0000, 0xc900, 0xffdb, 0xf1ee]],
+			 [0xfe, 2, [0x0000, 0xc9fe, 0xffdb, 0xf1ee]],
+			 [0xfd, 1, [0xfd00, 0xc9fe, 0xffdb, 0xf1ee]],
+			 [0xf4, 0, [0xfdf4, 0xc9fe, 0xffdb, 0xf1ee]],
+			 [0xff, 0, [0xfdf4, 0xc9fe, 0xffdb, 0xf1ee]],
+			 [0x14, 0, [0xfdf4, 0xc9fe, 0xffdb, 0xf1ee]]
+			 ]
+		];
+		var test_count = 0;
+		var packer = int64.getPacker();
+		var pk = packer.create();
+		var i, j, v, w, a, ok = 0;
+		for (i in test_values) {
+			log('case #' + i);
+			v = test_values[i];
+			test_count += v.length * 2;
+			log(v);
+			packer.init(pk);
+			for (j in v) {
+				log('pack: ' + j);
+				w = v[j];
+				log(w);
+				log(w[2]);
+				packer.push(pk, w[0]);
+				log('field-p check');
+				log(w[1]);
+				log(pk.p);
+				ok += T.check(pk.p === w[1]);
+				log('field-v check');
+				log(w[2]);
+				log(pk.v);
+				ok += T.checkA(w[2], pk.v);
+			}
+		}
+		return ok === test_count;
+	});
+	
+	// Packer getCopy
+	// -----------------------------------------------
+	T.makeTest('packer_getCopy', false
+	, ['int64_getPacker', 'packer_create', 'packer_init', 'packer_push', 'int64_parse', 'int64_toHex', 'int64_equals']
+	, function() {
+		var test_values = [
+			[[0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88], '1122334455667788'],
+			[[0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10], 'fedcba9876543210'],
+			[[0xff, 0x00, 0xee, 0x01], 'ff00ee0100000000'],
+			[[0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01], '1'],
+			[[0x1], '100000000000000'],
+			[[], '0']
+		];
+		var test_count = test_values.length;
+		var packer = int64.getPacker();
+		var pk = packer.create();
+		var i, ok = 0;
+		for (i in test_values) {
+			log('case #' + i);
+			v = test_values[i];
+			log(v[0]);
+			packer.init(pk);
+			for (j in v[0]) {
+				packer.push(pk, v[0][j]);
+			}
+			w = packer.getCopy(pk);
+			a = int64.parse(v[1]);
+			log(int64.toHex(a));
+			log(int64.toHex(w));
+			ok += T.check(int64.equals(a, w));
+		}
+		return ok === test_count;
+	});
 };
