@@ -201,6 +201,36 @@ function TesterUtilJS(__tester, __tester_name) {
 		return 1;
 	};
 	
+	var _checkAP = function(a1, o1, a2, o2, len) {
+		var i;
+		for (i = 0; i < len; i++) {
+			if (a1[i + o1] !== a2[i + o2]) {
+				_log('NG');
+				_log('i = ' + i);
+				_log(a1[i + o1]);
+				_log(a2[i + o2]);
+				return 0;
+			}
+		}
+		_log('OK');
+		return 1;
+	};
+	
+	var _checkAPfn = function(a1, o1, a2, o2, len, cmpf) {
+		var i;
+		for (i = 0; i < len; i++) {
+			if (cmpf(a1[i + o1], a2[i + o2]) === false) {
+				_log('NG');
+				_log('i = ' + i);
+				_log(a1[i + o1]);
+				_log(a2[i + o2]);
+				return 0;
+			}
+		}
+		_log('OK');
+		return 1;
+	};
+	
 	var _checkKey = function(o, ks) {
 		var i;
 		for (i in ks) {
@@ -260,6 +290,8 @@ function TesterUtilJS(__tester, __tester_name) {
 	this.check       = __tester['check']       = _check;
 	this.checkA      = __tester['checkA']      = _checkA;
 	this.checkAfn    = __tester['checkAfn']    = _checkAfn;
+	this.checkAP     = __tester['checkAP']     = _checkAP;
+	this.checkAPfn   = __tester['checkAPfn']   = _checkAPfn;
 	this.checkKey    = __tester['checkKey']    = _checkKey;
 	this.setSkip     = __tester['setSkip']     = _setSkip;
 	this.setLogging  = __tester['setLogging']  = _setLogging;
