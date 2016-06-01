@@ -489,4 +489,42 @@ var IntClassTester = new function() {
 		return ok === test_count;
 	});
 	
+	// int64 add5
+	// -----------------------------------------------
+	T.makeTest('int64_add5', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+		var test_values = [
+			['0', '0', '0', '0', '0', '0'],
+			['1', '1', '1', '1', '1', '5'],
+			['4000', '4000', '4000', '4000', '4000', '14000'],
+			['f7680c3d7281db30', '21041d12735567cf', '9f10f5bd31d296b8', '23e7705b73947495', 'b201b13b8c6e964', 'e684aa7c440537b0'],
+			['9de4de84745f4e60', '111dfcc777cd81af', 'af57f3189cca7d17', '34ff3b8551753e7c', '3d383506a9af1f70', 'd0923ef0841bab12'],
+			['9137ec90a62ce92a', 'f5bad0c4f12a5c57', '30d939d4aab8fa12', 'f8ce2f1aee7cf0c8', 'c4d6e7572279bf54', '75710d9c5306efaf'],
+			['5c8fde377e8f4bb0', '2a5eaef857f659d3', '8ef4de0b5cda130d', 'e2d68a847c89193', '852f8ac1de77aa69', 'a9405ea5599ff48c'],
+			['9b5c732e6782c9c0', '183b7579d8c31d98', '4d60c0339f27431d', 'e8bb21559fefbdd6', 'd8ef50b0dc525580', 'c2a31ae25baf3dcb'],
+			['2260e3055b2828a1', '31a26722f521d3ce', '918b626ca0b0f802', '8e45c2c1188054c9', 'faac9e339ecd8a6c', '6e810d89a848d3a6'],
+			['9fc6cd354d374018', 'bd450b5ed68885ac', '6f18e6550cdb2836', '24b290bc8b263ed', '762cffb96c9b11ce', '449ce7ae65e863b5'],
+			['964072dff70e6242', '808c6445450b3f69', 'c05da34cbd7d5073', '7c2dd627d4315496', '76e3b2d401eb4ce', '5ac68bc70de6fb82'],
+			['eca92cbdab854fab', '5afb12805dfb21a2', '47e54ce7cc6dde0e', '8a879838062e5d23', '454858f7eb5ab44f', '5f597d55c77760cd'],
+			['b00e27d00607172b', 'f3068d48d57743a1', 'ae4bcdcef3d10da9', '9fca5fb7c54f0976', 'e0b885f1ce6ba2d5', 'd1e36891630a14c0'],
+			['be1d7d9fe76d02d2', '84d3bdd309b027f9', '8b855814d25032cb', '592dab16239c4d86', '4563c0f694464784', '6d07ff947b4ff2a0'],
+			['9e6ecf0fb665817e', '4d3b682c17aca273', '7b71b121edf2c132', '3f7328923f097281', '4db1e7e0cc6680f6', 'f440f8d0c774d89a'],
+			['8a5b0e273f374bba', '2e72a6f9797ad97', 'cf9f244a65c13367', '4e6c6554abe6a421', '4438d7ddc1de877e', 'ef869a13aa555857'],
+			['6ababcf6f079846b', 'b554d3a7b11713b2', 'c63468bc2c2b7fa7', '7ddef0b9284c0d68', '110e28e252d5956c', '753112f648ddba98']
+		];
+		var test_count = test_values.length;
+		var i, j, v, s, ok = 0;
+		var w = new Array(5);
+		for (i in test_values) {
+			v = test_values[i];
+			for (j = 0; j < 5; j++) {
+				w[j] = int64.parse(v[j]);
+			}
+			s = int64.add5(w[0], w[1], w[2], w[3], w[4]);
+			a = int64.parse(v[5]);
+			log(v);
+			log(int64.toHex(s));
+			ok += T.check(int64.equals(a, s));
+		}
+		return ok === test_count;
+	});
 };
