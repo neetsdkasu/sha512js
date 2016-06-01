@@ -572,4 +572,30 @@ var IntClassTester = new function() {
 		return ok === test_count;
 	});
 	
+	// Int64 copyBytes
+	// -----------------------------------------------
+	T.makeTest('int64_copyBytes', false, ['int64_parse'], function() {
+		var test_values = [
+			['0', 0, [0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]],
+			['1', 1, [0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1]],
+			['801f703e60405cab', 7, [0x80, 0x1f, 0x70, 0x3e, 0x60, 0x40, 0x5c, 0xab]]
+		];
+		var test_count = test_values.length;
+		var i, j, ok = 0;
+		var v, o, w, s = new Array(20);
+		for (i in test_values) {
+			for (j = 0; j < 20; j++) {
+				s[j] = 0;
+			}
+			v = test_values[i];
+			w = int64.parse(v[0]);
+			o = v[1];
+			int64.copyBytes(w, s, o);
+			log(v);
+			log(v[2]);
+			log(s);
+			ok += T.checkAP(v[2], 0, s, o, 8);
+		}
+		return ok === test_count;
+	});
 };
