@@ -189,7 +189,6 @@ var ByteIteratorTester = new function() {
 			strsrc = v[0];
 			offset = v[1];
 			len = v[2];
-			bytes = v[3];
 			log('str: ' + strsrc);
 			log('offset: ' + offset);
 			log('len: ' + len);
@@ -238,4 +237,5 @@ var ByteIteratorTester = new function() {
 		}
 		return true;
 	});
+	
 };
