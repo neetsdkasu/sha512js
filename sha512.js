@@ -262,6 +262,7 @@ var SHA512JS = new function() {
 		var _str ='';
 		var _idx = 0;
 		var _iend = 0;
+		var _size = 0;
 		this.hasNext = function() { return _idx < _iend; };
 		this.next = function() { return _str.charCodeAt(_idx++) & 0xFF; };
 		this.size = function() { return _size; };
