@@ -234,7 +234,7 @@ function TesterUtilJS(__tester, __tester_name) {
 	var _checkKey = function(o, ks) {
 		var i;
 		for (i in ks) {
-			if (o[ks[i]]) {
+			if (o[ks[i]] !== undefined) {
 				continue;
 			}
 			_log('NG');
