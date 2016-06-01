@@ -145,4 +145,97 @@ var ByteIteratorTester = new function() {
 		return true;
 	});
 	
+	// ByteStringByteIterator
+	// -------------------------------------
+	T.makeTest('ByteStringByteIterator', false, [], function() {
+		log('construct');
+		var iter = new ByteStringByteIterator();
+		log(iter);
+		log('check common fields');
+		log(common_fields);
+		if (T.checkKey(iter, common_fields) === 0) {
+			return false;
+		}
+		var fields = ['init'];
+		log('check fields');
+		log(fields);
+		if (T.checkKey(iter, fields) === 0) {
+			return false;
+		}
+		log('check first state (before first init)');
+		log('size() 0?');
+		log(iter.size());
+		if (T.check(iter.size() === 0) === 0) {
+			return false;
+		}
+		log('hasNext false?');
+		log(iter.hasNext());
+		if (T.check(iter.hasNext() === false) === 0) {
+			return false;
+		}
+		var test_values = [
+			['ABC', 0, 3],
+			['abcdefghij', 2, 4],
+			['XYZ0123ABC', 5, 5],
+			['KLmno',2, 0],
+			['', 0, 0],
+			['S', 0, 1]
+		];
+		var i, hasNext_value, next_value;
+		var j, strsrc, offset, len, v, bytevalue;
+		for (j in test_values) {
+			log('case #' + j);
+			v = test_values[j];
+			strsrc = v[0];
+			offset = v[1];
+			len = v[2];
+			bytes = v[3];
+			log('str: ' + strsrc);
+			log('offset: ' + offset);
+			log('len: ' + len);
+			iter.init(strsrc, offset, len);
+			log('size ' + len + '?');
+			log(iter.size());
+			if (T.check(iter.size() === len) === 0) {
+				return false;
+			}
+			log('test iterate');
+			for (i = 0; i < len; i++) {
+				log('item: ' + i);
+				log('hasNext true?');
+				hasNext_value = iter.hasNext();
+				log(hasNext_value);
+				if (T.check(hasNext_value === true) === 0) {
+					return;
+				}
+				bytevalue = strsrc.charCodeAt(i + offset) & 0xFF;
+				log('next ' + bytevalue + '?');
+				next_value = iter.next();
+				log(next_value);
+				if (T.check(next_value === bytevalue) === 0) {
+					return false;
+				}
+			}
+			log('now, must have no item');
+			log('hasNext false?');
+			hasNext_value = iter.hasNext();
+			log(hasNext_value);
+			if (T.check(hasNext_value === false) === 0) {
+				return false;
+			}
+			bytevalue = strsrc.charCodeAt(i + offset) & 0xFF;
+			log('next ' + bytevalue + '? (it is reference original array)');
+			next_value = iter.next();
+			log(next_value);
+			if (T.check(next_value === bytevalue) === 0) {
+				return false;
+			}
+			log('size ' + len + '? (size must not change)');
+			log(iter.size());
+			if (T.check(iter.size() === len) === 0) {
+				return false;
+			}
+		}
+		return true;
+	});
 };
