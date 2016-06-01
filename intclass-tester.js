@@ -449,4 +449,44 @@ var IntClassTester = new function() {
 		var ok = T.check(int64.equals(a, z));
 		return ok === 1;
 	});
+	
+	// int64 add4
+	// -----------------------------------------------
+	T.makeTest('int64_add4', false, ['int64_parse', 'int64_toHex', 'int64_equals'], function() {
+		var test_values = [
+			['0', '0', '0', '0', '0'],
+			['1', '1', '1', '1', '4'],
+			['4000', '4000', '4000', '4000', '10000'],
+			['62ec63a2dd2ae650', '3f5fd239401e4dd1', '6a74d21b60a83247', '7ecd747dd9fe6d6e', '8b8e7c7557efd3d6'],
+			['732ad2ec01150c5a', 'e1daf90dc69a60ca', '6fab3bb5bc7276f2', '9da9dcfa5758dbda', '625ae4a9db7abff0'],
+			['56d253f2f6931797', '9a72603999920bde', '24305920891fd621', 'cf282ee37594bbd3', 'e49d3c308ed9b569'],
+			['97e1c12c4b790a5b', '5d339df2796b8ad5', '1d31567791abf830', '409af92c22338dc', '1650652918b3c63c'],
+			['2c05b545bfefca65', '79933eda7eeb4e19', '3ff9c5484a6b1e4c', 'fc6cb8ae750d3156', 'e1ff7216fe536820'],
+			['610592d803f55f25', '2263e0c165f4a59f', '4b260c8796b125e3', '2b80a656bad773bc', 'fa102677bb729e63'],
+			['74f40e6f8f77aacb', '5ac068fa86bc9b4f', '8ab04855d85ebcc1', 'c9bf29bb76043474', '2423e97b6497374f'],
+			['5392c38ae5f329fe', '8a80ce0d428005', '969546daeb462471', '91b58a8385df9716', '7c6815b7645b658a'],
+			['e571d13ad8c060f3', 'd86c0d57cec87496', 'f543d3ca44edfcdf', '15a8675c646727ff', 'c8ca19b950ddfa67'],
+			['a62c1b1fef182098', 'b580607df5ad7a06', '7d665ad795442e76', '8018600607a6174d', '592b367b81afe061'],
+			['82c1b5e7edfa5225', 'c64c4f1eb48b9af', 'bdfc7e804f746d8a', 'c3b506b45b0eb65d', '10d8000e83c62fbb'],
+			['71a1b02747d36107', '4031f80538b60ebc', '491945cb80a427c', '5aaea86ce6e959b0', '1113e4f61f7d0bef'],
+			['78188c112eb8ee9e', '268f4fdadf91e2f1', '15e730472c3e94b6', 'e50dd6ce3a234c24', '999ce30174acb269'],
+			['559a8130f880de86', '5afe0f48c77e1028', 'c2ff27d0171f3713', '97cef85c75f2257d', 'b66b0a64d104b3e']
+		];
+		var test_count = test_values.length;
+		var i, j, v, s, ok = 0;
+		var w = new Array(4);
+		for (i in test_values) {
+			v = test_values[i];
+			for (j = 0; j < 4; j++) {
+				w[j] = int64.parse(v[j]);
+			}
+			s = int64.add4(w[0], w[1], w[2], w[3]);
+			a = int64.parse(v[4]);
+			log(v);
+			log(int64.toHex(s));
+			ok += T.check(int64.equals(a, s));
+		}
+		return ok === test_count;
+	});
+	
 };
