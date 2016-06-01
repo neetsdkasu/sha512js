@@ -281,14 +281,14 @@ var SHA512JS = new function() {
 		var _i;
 		this.hasNext = function() { return _idx < _iend; };
 		this.next = function() {
-			_i = _mask - (_idx & _mask);
+			_i = (_mask - (_idx & _mask)) << 3;
 			return (_arr[(_idx++) >> _shift] >> _i) & 0xFF;
 		};
 		this.size = function() { return _size; }
 		this.init = function(data, offset, len, bits) {
-			// bits: Integer bits (16 or 32 or 64 ... any pow(2,x))
-			_mask = bits - 1; _shift = (bits >> 3) - 1;
-			_arr = data; _idx = offset << _shift; _iend = (offset + len) << _shift;
+			// bits: Integer bits (16 or 32) (javascript's shift operators support only 32bits number)
+			_mask = (bits >> 3) - 1; _shift = bits >> 4;
+			_arr = data; _idx = offset << _shift; _iend = (offset + len) << _shift; _size = len * (bits >> 3);
 		};
 	}
 	
