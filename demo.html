@@ -10,18 +10,14 @@
 		
 		<script type="text/javascript" src="./testerutil.js"></script>
 		<script type="text/javascript" src="./intclass-tester.js"></script>
+		<script type="text/javascript" src="./byteiterator-tester.js"></script>
 		<script type="text/javascript" src="./sha512-tester.js"></script>
 		<script type="text/javascript" src="./sha512.js"></script>
 		<script type="text/javascript">
 			
-			IntClassTester.setSkip(true);
+			ByteIteratorTester.setSkip(true);
 			
-			IntClassTester.testAll(true, [
-				'int64_getPacker',
-				'packer_create',
-				'packer_init',
-				'packer_push',
-				'packer_getCopy'
+			ByteIteratorTester.testAll(true, [
 			]);
 			
 		</script>

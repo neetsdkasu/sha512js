@@ -547,4 +547,12 @@ var SHA512JS = new function() {
 			"IntClass": IntClass
 		});
 	}
+	if (ByteIteratorTester) {
+		ByteIteratorTester.bind({
+			"EMPTYITER": EMPTYITER,
+			"ByteArrayByteIterator": ByteArrayByteIterator,
+			"ByteStringByteIterator": ByteStringByteIterator,
+			"NumberArrayByteIterator": NumberArrayByteIterator
+		});
+	}
 }
