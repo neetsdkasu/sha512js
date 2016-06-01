@@ -476,6 +476,7 @@ var IntClassTester = new function() {
 		var i, j, v, s, ok = 0;
 		var w = new Array(4);
 		for (i in test_values) {
+			log('case #' + i);
 			v = test_values[i];
 			for (j = 0; j < 4; j++) {
 				w[j] = int64.parse(v[j]);
@@ -515,6 +516,7 @@ var IntClassTester = new function() {
 		var i, j, v, s, ok = 0;
 		var w = new Array(5);
 		for (i in test_values) {
+			log('case #' + i);
 			v = test_values[i];
 			for (j = 0; j < 5; j++) {
 				w[j] = int64.parse(v[j]);
@@ -559,6 +561,7 @@ var IntClassTester = new function() {
 		var i, j, v, s, ok = 0;
 		var w = new Array(3);
 		for (i in test_values) {
+			log('case #' + i);
 			v = test_values[i];
 			for (j = 0; j < 3; j++) {
 				w[j] = int64.parse(v[j]);
@@ -584,6 +587,7 @@ var IntClassTester = new function() {
 		var i, j, ok = 0;
 		var v, o, w, s = new Array(20);
 		for (i in test_values) {
+			log('case #' + i);
 			for (j = 0; j < 20; j++) {
 				s[j] = 0;
 			}
