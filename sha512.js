@@ -501,7 +501,7 @@ var SHA512JS = new function() {
 			do {
 				Packer.push(x.packer, 0x00);
 				p += 8;
-			} while (__tryCompress(p, x));
+			} while (__tryCompress(p, x) === false);
 			p = 0;
 		}
 		while (p < 896) {
