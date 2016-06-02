@@ -19,7 +19,7 @@ var SHA512JSTester = new function() {
 	// fields
 	// -----------------------------------------------
 	T.makeTest('fields', false, [], function() {
-		var fields = ['create', 'init', 'finish', 'getHash', 'getInt64', 'toHexString', 'toByteString',
+		var fields = ['create', 'init', 'finish', 'getHash', 'getInt64', 'toHexString', 'toByteString', 'getHashToNumberArray',
 			 'updateByByteArray', 'updateByByteString', 'updateByNumberArray'];
 		log(fields);
 		log(SHA512JS);
@@ -32,6 +32,39 @@ var SHA512JSTester = new function() {
 		return Int64 === SHA512JS.getInt64();
 	});
 	
+	// getHashToNumberArray 16bit
+	// -----------------------------------------------
+	T.makeTest('getHashToNumberArray_16bit', false, [], function() {
+		var a = [
+			0x6a09, 0xe667, 0xf3bc, 0xc908, 0xbb67, 0xae85, 0x84ca, 0xa73b,
+			0x3c6e, 0xf372, 0xfe94, 0xf82b, 0xa54f, 0xf53a, 0x5f1d, 0x36f1,
+			0x510e, 0x527f, 0xade6, 0x82d1, 0x9b05, 0x688c, 0x2b3e, 0x6c1f,
+			0x1f83, 0xd9ab, 0xfb41, 0xbd6b, 0x5be0, 0xcd19, 0x137e, 0x2179
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		var hash = new Array(32);
+		SHA512JS.getHashToNumberArray(cnt, 16, hash, 0);
+		log(a);
+		log(hash);
+		return T.checkA(a, hash);
+	});
+	
+	// getHashToNumberArray 32bit
+	// -----------------------------------------------
+	T.makeTest('getHashToNumberArray_32bit', false, [], function() {
+		var a = [
+			0x6a09e667, 0xf3bcc908, 0xbb67ae85, 0x84caa73b, 0x3c6ef372, 0xfe94f82b, 0xa54ff53a, 0x5f1d36f1,
+			0x510e527f, 0xade682d1, 0x9b05688c, 0x2b3e6c1f, 0x1f83d9ab, 0xfb41bd6b, 0x5be0cd19, 0x137e2179
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		var hash = new Array(16);
+		SHA512JS.getHashToNumberArray(cnt, 32, hash, 0);
+		log(a);
+		log(hash);
+		return T.checkA(a, hash);
+	});
 	
 	// toHexString
 	// -----------------------------------------------
@@ -264,4 +297,48 @@ var SHA512JSTester = new function() {
 		return ok === test_count;
 		
 	});
+	
+		// hash test multi update
+	// -----------------------------------------------
+	T.makeTest('hash_test_multi_update', false, [], function() {
+		var test_values = [
+			[['abcdefghijklmnopqr', 'stuvwxyzABCDEFGH', 'IJKLMNOPQRSTUVWXYZ0123456789'],
+				'e26b7daef4366128fc7ae3fb75f31789ae03648c61b91192ac6cffb4924a1ce53c0768fe21daab635f5aebaa7fd112b325fd6a32715926c3d73d1ac31e6431a5'],
+			[['Hello, I am a human. ', 'This is a pen. ', 'It is very heavy. ', 'I have it.'],
+				'bfdccdfb7e212cfdfc6b2126026b8316e0aa2ad0f7e6e6ce4fd9d0dd943080f2a20c33a94e8596ae8dc02353aaebe72cdb72b6e23128dbd8b1c78d61d410c742'],
+			[['Windows Mac OSX Linux BSDUnix ', 'InternetExplorer FireFox GoogleChrome Safari Opera ', 'Microsoft Apple Google GNU ', 'JavaScript HTML CSS'],
+				'cd6fdc79577d6ec6d0c35f7d6b6f69648d43fa5fcccb1edba6d3d7db2e55d27ad5d00e3b807f23c3aa3e003bceb1b5f05ee8c38a868c576322a3e2faad6113d5'],
+			[["function FizzBuzz() { var i; ", "for (;;) { if (i % 15 === 0) { println('FizzBuzz'); } ", "else if (i % 5 === 0) { println('Buzz'); } else ", "if (i % 3 === 0) { println('Fizz'); } else { println(i); } } } } FizzBuzz();"],
+				'0468a49a4edab01f33cf28f08694e00baf20eca3d03fa01204c388fde00e85bdf3bf0e2bb035597bd0ffd87c5f08cca0800446b1ea506605e48cd5bbd14eb45c'],
+			[['Application Basic Cir', 'cle Depth Earth Fo', 'rce Graphic Heaven Idle Jok', 'er Kid Lion Music Nice O'],
+				'4d293dd1e7257bd2ca479e4dd6e1803176267445648b826ab997a6a7d4d11b5a9af5465bd2caf3250367b5d59d6c30315dd3264226ab5dea140a2b69e320ea08'],
+			[['abcdefghijkl', 'mnopqrstuvwxyzABCDEFGHIJK', 'LMNOPQRSTUVWXYZ012345678', '9!#$%()~|{}[]-=*+<>,.;:?_@`'],
+				'e64c87c526b094a83fece0f21e1de029a56ac98b440a0e3274a79c868e23425104b92e00efca2be6f21d5e4fdb422509735ba8c620eac8f86964a62fc8069398'],
+			[['This i', 's Test!!'],
+				'd65cd5b0fc7120b2bf54fcbea341d40a2a8e30ba5dc0790ab2cbbe9976d3bf9cf4f7be4b9344ca49120ecce97f2be3a876baaf3047ede0aacfe1d10961681146'],
+			[['C ', 'C++ ', 'Java ', 'Python ', 'Perl ', 'PHP ', 'Ruby ', 'JavaScript ', 'Haskell ', 'Scheme ', 'CommonLisp ', 'Go ', 'Objective-C ', 'Swift ', 'Rust ', 'COBOL ', 'Fortran ', 'BASIC ', 'Scala'],
+				'eb4828882a2758b2027c0aa02c9f1ea26cdcc6c31969ed294e5221eee663e64ed88ba12a9e7534f0311273be88f1ca42644f39c7d8d913b13a730c0102e73726']
+		];
+		var test_count = test_values.length;
+		var i, j, s, v, w, ok = 0;
+		var cnt = SHA512JS.create();
+		for (i in test_values) {
+			log('case #' + i);
+			v = test_values[i];
+			w = v[0];
+			SHA512JS.init(cnt);
+			for (j in w) {
+				SHA512JS.updateByByteString(cnt, w[j], 0, w[j].length);
+			}
+			SHA512JS.finish(cnt);
+			s = SHA512JS.toHexString(cnt);
+			log(v[0]);
+			log(v[1]);
+			log(s);
+			ok += T.check(v[1] === s);
+		}
+		return ok === test_count;
+		
+	});
+
 };
