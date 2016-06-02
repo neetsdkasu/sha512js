@@ -6,7 +6,21 @@
 	</head>
 	<body>
 		
-		<div id="div1"></div>
+		<h4>Demo SHA512</h4>
+		
+		<label for="srcstr">Source:</label>
+		<br />
+		<textarea id="srcstr" cols="80" rows="3">abc</textarea>
+		<br />
+		<button onclick="sample1();">Sample1</button>
+		<button onclick="sample2();">Sample2</button>
+		<button onclick="calcHash();">Get Hash</button>
+		<br />
+		<br />
+		<label for="sha512hash">Hash:</label>
+		<br />
+		<textarea id="sha512hash" cols="130" rows="2"></textarea>
+		
 		
 		<script type="text/javascript" src="./testerutil.js"></script>
 		<script type="text/javascript" src="./intclass-tester.js"></script>
@@ -20,6 +34,35 @@
 			IntClassTester.testAll();
 			ByteIteratorTester.testAll();
 			SHA512JSTester.testAll();
+			
+			// Set Sample1
+			// --------------------------------
+			function sample1() {
+				document.getElementById('srcstr').value = 'abc';
+				document.getElementById('sha512hash').value = '';
+			}
+			
+			// Set Sample2
+			// --------------------------------
+			function sample2() {
+				document.getElementById('srcstr').value = 'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu';
+				document.getElementById('sha512hash').value = '';
+			}
+			
+			// Calc Hash
+			// --------------------------------
+			function calcHash() {
+				var srcstr = document.getElementById('srcstr').value;
+				
+				var cnt = SHA512JS.create();
+				SHA512JS.init(cnt);
+				SHA512JS.updateByByteString(cnt, srcstr, 0, srcstr.length);
+				SHA512JS.finish(cnt);
+				
+				var hash = SHA512JS.toHexString(cnt);
+				document.getElementById('sha512hash').value = hash;
+				
+			}
 			
 		</script>
 	</body>
