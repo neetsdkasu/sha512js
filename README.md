@@ -213,4 +213,20 @@ SHA512JS.toByteString(cnt)
 
 
 
+
+SHA512JS.getHashToNumberArray(cnt, bits, numarray, offset)
+-----------------------------------------------------------
+	cnt      : container
+	bits     : integer bits (16 or 32)
+	numarray : integer array to copy to hash
+	offset   : array index offset
+	
+	return : undefined (nothing)
+	
+	copy SHA512 hash data(64bytes) to integer array (16bit or 32bit)
+	be careful, argument bits position is difference position of updateByNumberArray
+
+
+
+
 ````

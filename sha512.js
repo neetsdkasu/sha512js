@@ -539,6 +539,18 @@ var SHA512JS = new function() {
 		}
 	};
 	
+	this.getHashToNumberArray = function(x, bits, dest, offset) {
+		// bits: 16 or 32
+		var i, b, j, p = offset, s = bits >> 2;
+		for (i = 0; i < 8; i++) {
+			b = Int64.toHex(x.hash[i]);
+			for (j = 0; j < 16; j += s) {
+				dest[p] = parseInt(b.substring(j, j + s), 16);
+				p++;
+			}
+		}
+	};
+	
 	this.toHexString = function(x) {
 		var i, s = '';
 		for (i = 0; i < 8; i++) {

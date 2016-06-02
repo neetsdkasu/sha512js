@@ -19,7 +19,7 @@ var SHA512JSTester = new function() {
 	// fields
 	// -----------------------------------------------
 	T.makeTest('fields', false, [], function() {
-		var fields = ['create', 'init', 'finish', 'getHash', 'getInt64', 'toHexString', 'toByteString',
+		var fields = ['create', 'init', 'finish', 'getHash', 'getInt64', 'toHexString', 'toByteString', 'getHashToNumberArray',
 			 'updateByByteArray', 'updateByByteString', 'updateByNumberArray'];
 		log(fields);
 		log(SHA512JS);
@@ -32,6 +32,39 @@ var SHA512JSTester = new function() {
 		return Int64 === SHA512JS.getInt64();
 	});
 	
+	// getHashToNumberArray 16bit
+	// -----------------------------------------------
+	T.makeTest('getHashToNumberArray_16bit', false, [], function() {
+		var a = [
+			0x6a09, 0xe667, 0xf3bc, 0xc908, 0xbb67, 0xae85, 0x84ca, 0xa73b,
+			0x3c6e, 0xf372, 0xfe94, 0xf82b, 0xa54f, 0xf53a, 0x5f1d, 0x36f1,
+			0x510e, 0x527f, 0xade6, 0x82d1, 0x9b05, 0x688c, 0x2b3e, 0x6c1f,
+			0x1f83, 0xd9ab, 0xfb41, 0xbd6b, 0x5be0, 0xcd19, 0x137e, 0x2179
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		var hash = new Array(32);
+		SHA512JS.getHashToNumberArray(cnt, 16, hash, 0);
+		log(a);
+		log(hash);
+		return T.checkA(a, hash);
+	});
+	
+	// getHashToNumberArray 32bit
+	// -----------------------------------------------
+	T.makeTest('getHashToNumberArray_32bit', false, [], function() {
+		var a = [
+			0x6a09e667, 0xf3bcc908, 0xbb67ae85, 0x84caa73b, 0x3c6ef372, 0xfe94f82b, 0xa54ff53a, 0x5f1d36f1,
+			0x510e527f, 0xade682d1, 0x9b05688c, 0x2b3e6c1f, 0x1f83d9ab, 0xfb41bd6b, 0x5be0cd19, 0x137e2179
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		var hash = new Array(16);
+		SHA512JS.getHashToNumberArray(cnt, 32, hash, 0);
+		log(a);
+		log(hash);
+		return T.checkA(a, hash);
+	});
 	
 	// toHexString
 	// -----------------------------------------------
