@@ -8,5 +8,184 @@
 var SHA512JSTester = new function() {
 	
 	var T = new TesterUtilJS(this, 'SHA512JSTester');
+	var log = T.log;
+	
+	var Int64;
+	
+	T.setBindFunc(function(x) {
+		Int64 = x['Int64'];
+	});
+	
+	// fields
+	// -----------------------------------------------
+	T.makeTest('fields', false, [], function() {
+		var fields = ['create', 'init', 'finish', 'getHash', 'getInt64',
+			 'updateByByteArray', 'updateByByteString', 'updateByNumberArray'];
+		log(fields);
+		log(SHA512JS);
+		return T.checkKey(SHA512JS, fields) === 1;
+	});
+	
+	// getInt64
+	// -----------------------------------------------
+	T.makeTest('getInt64', false, [], function() {
+		return Int64 === SHA512JS.getInt64();
+	});
+	
+	
+	// sample1 hash
+	// -----------------------------------------------
+	var _sample1_hash = [
+		0xdd, 0xaf, 0x35, 0xa1, 0x93, 0x61, 0x7a, 0xba, 0xcc, 0x41, 0x73, 0x49, 0xae, 0x20, 0x41, 0x31,
+		0x12, 0xe6, 0xfa, 0x4e, 0x89, 0xa9, 0x7e, 0xa2, 0x0a, 0x9e, 0xee, 0xe6, 0x4b, 0x55, 0xd3, 0x9a,
+		0x21, 0x92, 0x99, 0x2a, 0x27, 0x4f, 0xc1, 0xa8, 0x36, 0xba, 0x3c, 0x23, 0xa3, 0xfe, 0xeb, 0xbd,
+		0x45, 0x4d, 0x44, 0x23, 0x64, 0x3c, 0xe8, 0x0e, 0x2a, 0x9a, 0xc9, 0x4f, 0xa5, 0x4c, 0xa4, 0x9f
+	];
+	
+	// sample1 manual
+	// -----------------------------------------------
+	T.makeTest('sample1_manual', false, [], function() {
+		var data = [
+			0x61626380, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+			0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+			0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+			0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000018
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		SHA512JS.updateByNumberArray(cnt, data, 0, data.length, 32);
+		var hash = new Array(64);
+		SHA512JS.getHash(cnt, hash, 0);
+		log(data);
+		log(_sample1_hash);
+		log(hash);
+		return T.checkA(_sample1_hash, hash);
+	});
+	
+	// sample1 auto by ByteArray
+	// -----------------------------------------------
+	T.makeTest('sample1_ByteArray', false, [], function() {
+		var bytedata = [0x61, 0x62, 0x63];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		SHA512JS.updateByByteArray(cnt, bytedata, 0, bytedata.length);
+		SHA512JS.finish(cnt);
+		var hash = new Array(64);
+		SHA512JS.getHash(cnt, hash, 0);
+		log(bytedata);
+		log(_sample1_hash);
+		log(hash);
+		return T.checkA(_sample1_hash, hash);
+	});
+	
+	// sample1 auto by ByteString
+	// -----------------------------------------------
+	T.makeTest('sample1_ByteString', false, [], function() {
+		var strdata = 'abc';
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		SHA512JS.updateByByteString(cnt,strdata, 0, strdata.length);
+		SHA512JS.finish(cnt);
+		var hash = new Array(64);
+		SHA512JS.getHash(cnt, hash, 0);
+		log(strdata);
+		log(_sample1_hash);
+		log(hash);
+		return T.checkA(_sample1_hash, hash);
+	});
+	
+	// sample2 hash
+	// -----------------------------------------------
+	var _sample2_hash = [
+		0x8e, 0x95, 0x9b, 0x75, 0xda, 0xe3, 0x13, 0xda, 0x8c, 0xf4, 0xf7, 0x28, 0x14, 0xfc, 0x14, 0x3f,
+		0x8f, 0x77, 0x79, 0xc6, 0xeb, 0x9f, 0x7f, 0xa1, 0x72, 0x99, 0xae, 0xad, 0xb6, 0x88, 0x90, 0x18,
+		0x50, 0x1d, 0x28, 0x9e, 0x49, 0x00, 0xf7, 0xe4, 0x33, 0x1b, 0x99, 0xde, 0xc4, 0xb5, 0x43, 0x3a,
+		0xc7, 0xd3, 0x29, 0xee, 0xb6, 0xdd, 0x26, 0x54, 0x5e, 0x96, 0xe5, 0x5b, 0x87, 0x4b, 0xe9, 0x09
+	];
+	
+	// sample2 manual
+	// -----------------------------------------------
+	T.makeTest('sample2_manual', false, [], function() {
+		var data = [
+			0x61626364, 0x65666768, 0x62636465, 0x66676869, 0x63646566, 0x6768696a, 0x64656667, 0x68696a6b,
+			0x65666768, 0x696a6b6c, 0x66676869, 0x6a6b6c6d, 0x6768696a, 0x6b6c6d6e, 0x68696a6b, 0x6c6d6e6f,
+			0x696a6b6c, 0x6d6e6f70, 0x6a6b6c6d, 0x6e6f7071, 0x6b6c6d6e, 0x6f707172, 0x6c6d6e6f, 0x70717273,
+			0x6d6e6f70, 0x71727374, 0x6e6f7071, 0x72737475, 0x80000000, 0x00000000, 0x00000000, 0x00000000,
+			0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+			0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+			0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+			0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000380
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		SHA512JS.updateByNumberArray(cnt, data, 0, data.length, 32);
+		var hash = new Array(64);
+		SHA512JS.getHash(cnt, hash, 0);
+		log(data);
+		log(_sample2_hash);
+		log(hash);
+		return T.checkA(_sample2_hash, hash);
+	});
+	
+	// sample2 auto by ByteArray
+	// -----------------------------------------------
+	T.makeTest('sample2_ByteArray', false, [], function() {
+		var bytedata = [
+			0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69,
+			0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b,
+			0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d,
+			0x67, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f,
+			0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x71,
+			0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x71, 0x72, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x71, 0x72, 0x73,
+			0x6d, 0x6e, 0x6f, 0x70, 0x71, 0x72, 0x73, 0x74, 0x6e, 0x6f, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		SHA512JS.updateByByteArray(cnt, bytedata, 0, bytedata.length);
+		SHA512JS.finish(cnt);
+		var hash = new Array(64);
+		SHA512JS.getHash(cnt, hash, 0);
+		log(bytedata);
+		log(_sample2_hash);
+		log(hash);
+		return T.checkA(_sample2_hash, hash);
+	});
+	
+	// sample2 auto by ByteString
+	// -----------------------------------------------
+	T.makeTest('sample2_ByteString', false, [], function() {
+		var strdata = '\abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu';
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		SHA512JS.updateByByteString(cnt,strdata, 0, strdata.length);
+		SHA512JS.finish(cnt);
+		var hash = new Array(64);
+		SHA512JS.getHash(cnt, hash, 0);
+		log(strdata);
+		log(_sample2_hash);
+		log(hash);
+		return T.checkA(_sample2_hash, hash);
+	});
+	
+	// sample2 auto by NumberArray
+	// -----------------------------------------------
+	T.makeTest('sample2_NumberArray', false, [], function() {
+		var numbers = [
+			0x61626364, 0x65666768, 0x62636465, 0x66676869, 0x63646566, 0x6768696a, 0x64656667, 0x68696a6b,
+			0x65666768, 0x696a6b6c, 0x66676869, 0x6a6b6c6d, 0x6768696a, 0x6b6c6d6e, 0x68696a6b, 0x6c6d6e6f,
+			0x696a6b6c, 0x6d6e6f70, 0x6a6b6c6d, 0x6e6f7071, 0x6b6c6d6e, 0x6f707172, 0x6c6d6e6f, 0x70717273,
+			0x6d6e6f70, 0x71727374, 0x6e6f7071, 0x72737475
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		SHA512JS.updateByNumberArray(cnt, numbers, 0, numbers.length, 32);
+		SHA512JS.finish(cnt);
+		var hash = new Array(64);
+		SHA512JS.getHash(cnt, hash, 0);
+		log(numbers);
+		log(_sample2_hash);
+		log(hash);
+		return T.checkA(_sample2_hash, hash);
+	});
 	
 };

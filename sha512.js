@@ -554,4 +554,9 @@ var SHA512JS = new function() {
 			"NumberArrayByteIterator": NumberArrayByteIterator
 		});
 	}
+	if (SHA512JSTester) {
+		SHA512JSTester.bind({
+			"Int64": Int64
+		});
+	}
 }
