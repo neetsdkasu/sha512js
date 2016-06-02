@@ -336,14 +336,6 @@ var SHA512JS = new function() {
 		for (i = 0; i < 8; i++) {
 			hash[i] = _init_hash_value[i]
 		}
-		x.a = hash[0];
-		x.b = hash[1];
-		x.c = hash[2];
-		x.d = hash[3];
-		x.e = hash[4];
-		x.f = hash[5];
-		x.g = hash[6];
-		x.h = hash[7];
 		x.size = 0;
 		Packer.init(x.packer);
 	};
@@ -420,14 +412,14 @@ var SHA512JS = new function() {
 	
 	var __compress = function(x) {
 		var w = __calcWj(x);
-		var a = x.a;
-		var b = x.b;
-		var c = x.c;
-		var d = x.d;
-		var e = x.e;
-		var f = x.f;
-		var g = x.g;
-		var h = x.h;
+		var a = x.hash[0];
+		var b = x.hash[1];
+		var c = x.hash[2];
+		var d = x.hash[3];
+		var e = x.hash[4];
+		var f = x.hash[5];
+		var g = x.hash[6];
+		var h = x.hash[7];
 		var j, t1, t2;
 		for (j = 0; j < 80; j++) {
 			t1 = Int64.add5(h, __ucSigma1(e), __Ch(e, f, g), _K[j], w[j]);
@@ -441,14 +433,6 @@ var SHA512JS = new function() {
 			b = a;
 			a = Int64.add(t1, t2);
 		}
-		x.a = a;
-		x.b = b;
-		x.c = c;
-		x.d = d;
-		x.e = e;
-		x.f = f;
-		x.g = g;
-		x.h = h;
 		x.hash[0] = Int64.add(x.hash[0], a);
 		x.hash[1] = Int64.add(x.hash[1], b);
 		x.hash[2] = Int64.add(x.hash[2], c);
