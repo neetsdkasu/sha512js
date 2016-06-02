@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SHA512JS (SHA512 for JavaScript)</title>
+	</head>
+	<body>
+		
+		<h1>SHA512JS (SHA512 for JavaScript)</h1>
+		
+		<div>version1.0.0</div>
+		
+		<div>last update: Jun 3 2016</div>
+		<hr />
+		
+		<p>
+			<b>PLATFORM</b>
+			<br />
+			Web Brwoser (JavaScript)
+		</p>
+		
+		<div><b>Description:</b></div>
+		<div>Calculate SHA512</div>
+		<br />
+		
+		<hr />
+		
+		<div><b>Source Files</b></div>
+		
+		<p>
+			<div><a href="https://github.com/neetsdkasu/sha512js/zipball/master">Download <strong>ZIP File</strong></a></div>
+			<div><a href="https://github.com/neetsdkasu/sha512js/tarball/master">Download <strong>TAR Ball</strong></a></div>
+			<div><a href="https://github.com/neetsdkasu/sha512js">View On <strong>GitHub</strong></a></div>
+		</p>
+
+		<hr />
+		
+		<br />
+		<div><a href="./demo.html"><b>Demo Page</b></a><div>
+		<br />
+		
+		<hr />
+		
+		<br />
+		
+		<b>Example:</b>
+<pre>
+&lt;script type="text/javascript" src="sha512.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+	
+	var data = 'abcd'; // String (use lower 8bit of character code)
+	
+	var cnt = SHA512JS.create();
+	
+	SHA512JS.init(cnt);
+	
+	SHA512JS.updateByByteString(cnt, data, 0, data.length);
+	
+	SHA512JS.finish(cnt);
+	
+	var hash = SHA512JS.toHexString(cnt); // d8022f2060ad6efd297ab73dcc5355c9b214054b0d1776a136a669d26a7d3b14f73aa0d0ebff19ee333368f0164b6419a96da49e3e481753e7e96b716bdccb6f
+	
+&lt;/script&gt;
+</pre>
+		
+		<hr />
+		
+		<h4>LICENSE</h4>
+<pre>
+Copyright (c) 2016, Leonardone @ NEETSDKASU
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice, this
+  list of conditions and the following disclaimer in the documentation and/or
+  other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+	</body>
+</html>
