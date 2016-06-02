@@ -52,8 +52,18 @@ function TesterUtilJS(__tester, __tester_name) {
 		}
 	};
 	
+	var _BAR = (function(){
+		var bar10 = '-----' + '-----';
+		var bar20 = bar10 + bar10
+		return ' ' + bar20 + bar20 + bar20 + bar20;
+	})();
+	
 	var _withBar = function(x) {
-		return (x + ' --------------------------------------------------').substring(0, 50);
+		if (x.length < 80) {
+			return (x + _BAR).substring(0, 80);
+		} else {
+			return x;
+		}
 	};
 	
 	var _testMustDo = function() {
