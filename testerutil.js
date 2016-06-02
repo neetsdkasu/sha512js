@@ -122,9 +122,9 @@ function TesterUtilJS(__tester, __tester_name) {
 		_self[flag_name] = false;
 		var func = function(s) {
 			_require(test_req);
-			_log(_withBar('TEST ' + test_name));
 			var r, bk = _logging_flag;
 			_setLogging(s !== false);
+			_log(_withBar('TEST ' + test_name));
 			r = test_func();
 			_setLogging(bk);
 			_log(_withBar('TEST ' + test_name + ' ' + (r ? 'OK' : 'NG')));
