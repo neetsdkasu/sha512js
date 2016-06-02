@@ -154,7 +154,7 @@ var SHA512JSTester = new function() {
 	// sample2 auto by ByteString
 	// -----------------------------------------------
 	T.makeTest('sample2_ByteString', false, [], function() {
-		var strdata = '\abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu';
+		var strdata = 'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu';
 		var cnt = SHA512JS.create();
 		SHA512JS.init(cnt);
 		SHA512JS.updateByByteString(cnt,strdata, 0, strdata.length);
