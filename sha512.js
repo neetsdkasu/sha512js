@@ -431,7 +431,7 @@ var SHA512JS = new function() {
 		var j, t1, t2;
 		for (j = 0; j < 80; j++) {
 			t1 = Int64.add5(h, __ucSigma1(e), __Ch(e, f, g), _K[j], w[j]);
-			t2 = Int64.add(__ucSigma0(a), __Maj(a, b, b));
+			t2 = Int64.add(__ucSigma0(a), __Maj(a, b, c));
 			h = g;
 			g = f;
 			f = e;
