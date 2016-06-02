@@ -406,11 +406,13 @@ var SHA512JS = new function() {
 		var j, w = x.w;
 		for (j = 16; j < 80; j++) {
 			w[j] = Int64.add4(__lcSigma1(w[j - 2]), w[j - 7], __lcSigma0(w[j - 15]), w[j - 16]);
+//			console.log('w[' + j + '] = ' + Int64.toHex(w[j]) + ', ' + Int64.toHex(x.w[j]));
 		}
 		return w;
 	};
 	
 	var __compress = function(x) {
+//		console.log('compress!');
 		var w = __calcWj(x);
 		var a = x.hash[0];
 		var b = x.hash[1];
@@ -421,6 +423,9 @@ var SHA512JS = new function() {
 		var g = x.hash[6];
 		var h = x.hash[7];
 		var j, t1, t2;
+//		console.log('init');
+//		console.log(Int64.toHex(a) + ' ' + Int64.toHex(b) + ' ' + Int64.toHex(c) + ' ' + Int64.toHex(d));
+//		console.log(Int64.toHex(e) + ' ' + Int64.toHex(f) + ' ' + Int64.toHex(g) + ' ' + Int64.toHex(h));
 		for (j = 0; j < 80; j++) {
 			t1 = Int64.add5(h, __ucSigma1(e), __Ch(e, f, g), _K[j], w[j]);
 			t2 = Int64.add(__ucSigma0(a), __Maj(a, b, c));
@@ -432,6 +437,9 @@ var SHA512JS = new function() {
 			c = b;
 			b = a;
 			a = Int64.add(t1, t2);
+//			console.log('t = ' + j);
+//			console.log(Int64.toHex(a) + ' ' + Int64.toHex(b) + ' ' + Int64.toHex(c) + ' ' + Int64.toHex(d));
+//			console.log(Int64.toHex(e) + ' ' + Int64.toHex(f) + ' ' + Int64.toHex(g) + ' ' + Int64.toHex(h));
 		}
 		x.hash[0] = Int64.add(x.hash[0], a);
 		x.hash[1] = Int64.add(x.hash[1], b);
@@ -446,6 +454,7 @@ var SHA512JS = new function() {
 	var __tryCompress = function(p, x) {
 		if ((p & 63) !== 0) { return false; }
 		x.w[(p >> 6) - 1] = Packer.getCopy(x.packer);
+//		console.log('w[' + ((p >> 6) - 1) + '] = ' + Int64.toHex(x.w[(p >> 6) - 1]));
 		Packer.init(x.packer);
 		if (p !== 1024) { return false; }
 		__compress(x);
@@ -453,10 +462,13 @@ var SHA512JS = new function() {
 	};
 	
 	var __update = function(x, iter) {
-		var p = x.size & 1023;
-		var b;
+		var p = x.size & 1023, v;
+//		var b = 0;
+//		console.log('iter.size: ' + iter.size());
 		while (iter.hasNext()) {
-			Packer.push(x.packer, iter.next());
+			v = iter.next();
+//			console.log('__update: ' + (b++) + ', ' + v.toString(16));
+			Packer.push(x.packer, v);
 			p += 8;
 			if (__tryCompress(p, x)) {
 				p = 0;
@@ -512,6 +524,8 @@ var SHA512JS = new function() {
 		// 128bits (message bits)
 		x.w[14] = Int64.ZERO; // I think ... maybe, allmost, message bits < 2^64
 		x.w[15] = Int64.valueOf(x.size);
+//		console.log('w[14] = ' + Int64.toHex(x.w[14]));
+//		console.log('w[15] = ' + Int64.toHex(x.w[15]));
 		
 		// final compress
 		__compress(x);
