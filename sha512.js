@@ -523,7 +523,7 @@ var SHA512JS = new function() {
 		}
 		// 128bits (message bits)
 		x.w[14] = Int64.ZERO; // I think ... maybe, allmost, message bits < 2^64
-		x.w[15] = Int64.valueOf(x.size);
+		x.w[15] = Int64.parse(x.size.toString(16));
 //		console.log('w[14] = ' + Int64.toHex(x.w[14]));
 //		console.log('w[15] = ' + Int64.toHex(x.w[15]));
 		
