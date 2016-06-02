@@ -357,33 +357,33 @@ var SHA512JS = new function() {
 	
 	var __ucSigma0 = function(x) {
 		return Int64.bwXor3(
-			Int64.shiftR(x, 28),
-			Int64.shiftR(x, 34),
-			Int64.shiftR(x, 39)
+			Int64.rotateR(x, 28),
+			Int64.rotateR(x, 34),
+			Int64.rotateR(x, 39)
 		);
 	};
 	
 	var __ucSigma1 = function(x) {
 		return Int64.bwXor3(
-			Int64.shiftR(x, 14),
-			Int64.shiftR(x, 18),
-			Int64.shiftR(x, 41)
+			Int64.rotateR(x, 14),
+			Int64.rotateR(x, 18),
+			Int64.rotateR(x, 41)
 		);
 	};
 	
 	var __lcSigma0 = function(x) {
 		return Int64.bwXor3(
-			Int64.shiftR(x, 1),
-			Int64.shiftR(x, 8),
-			Int64.rotateR(x, 7)
+			Int64.rotateR(x, 1),
+			Int64.rotateR(x, 8),
+			Int64.shiftR(x, 7)
 		);
 	};
 	
 	var __lcSigma1 = function(x) {
 		return Int64.bwXor3(
-			Int64.shiftR(x, 19),
-			Int64.shiftR(x, 61),
-			Int64.rotateR(x, 6)
+			Int64.rotateR(x, 19),
+			Int64.rotateR(x, 61),
+			Int64.shiftR(x, 6)
 		);
 	};
 	
