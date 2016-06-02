@@ -573,12 +573,12 @@ var SHA512JS = new function() {
 	
 	// Tester
 	// =============================================
-	if (IntClassTester) {
+	if (typeof IntClassTester !== 'undefined') {
 		IntClassTester.bind({
 			"IntClass": IntClass
 		});
 	}
-	if (ByteIteratorTester) {
+	if (typeof ByteIteratorTester !== 'undefined') {
 		ByteIteratorTester.bind({
 			"EMPTYITER": EMPTYITER,
 			"ByteArrayByteIterator": ByteArrayByteIterator,
@@ -586,7 +586,7 @@ var SHA512JS = new function() {
 			"NumberArrayByteIterator": NumberArrayByteIterator
 		});
 	}
-	if (SHA512JSTester) {
+	if (typeof SHA512JSTester !== 'undefined') {
 		SHA512JSTester.bind({
 			"Int64": Int64
 		});
