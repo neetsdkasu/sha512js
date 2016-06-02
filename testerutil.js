@@ -148,9 +148,9 @@ function TesterUtilJS(__tester, __tester_name) {
 	
 	var _testAll = function(s, ls) {
 		_testMustDo();
-		_log(_withBar('TEST ALL ( ' + __tester_name + ' )'));
-		var i, b = true, func;
 		var tg = (ls === undefined || ls.length === 0) ? _test_list : ls;
+		_log(_withBar('TEST ALL ( ' + __tester_name + ' ) [ ' + tg.length + ' ]'));
+		var i, b = true, func;
 		var ok = [], ng = [];
 		for (i in tg) {
 			func = __tester[_funcName(tg[i])];
@@ -162,10 +162,10 @@ function TesterUtilJS(__tester, __tester_name) {
 			}
 		}
 		_log(_withBar('TEST ALL ( ' + __tester_name + ' ) ' + (b ? 'OK' : 'NG')));
-		_log('OK TESTS:');
+		_log('OK TESTS: ' + ok.length + ' / ' + tg.length);
 		_log(ok);
 		if (b === false) {
-			_log('NG TESTS:');
+			_log('NG TESTS: ' + ng.length + ' / ' + tg.length);
 			_log(ng);
 		}
 		return ng.length === 0;
