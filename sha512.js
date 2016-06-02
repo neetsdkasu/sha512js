@@ -539,6 +539,26 @@ var SHA512JS = new function() {
 		}
 	};
 	
+	this.toHexString = function(x) {
+		var i, s = '';
+		for (i = 0; i < 8; i++) {
+			s += Int64.toHex(x.hash[i]);
+		}
+		return s;
+	};
+	
+	this.toByteString = function(x) {
+		var b = new Array(8);
+		var i, j, s = '';
+		for (i = 0; i < 8; i++) {
+			Int64.copyBytes(x.hash[i], b, 0);
+			for (j = 0; j < 8; j++) {
+				s += String.fromCharCode(b[j]);
+			}
+		}
+		return s;
+	};
+	
 	// Tester
 	// =============================================
 	if (IntClassTester) {

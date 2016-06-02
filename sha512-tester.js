@@ -19,7 +19,7 @@ var SHA512JSTester = new function() {
 	// fields
 	// -----------------------------------------------
 	T.makeTest('fields', false, [], function() {
-		var fields = ['create', 'init', 'finish', 'getHash', 'getInt64',
+		var fields = ['create', 'init', 'finish', 'getHash', 'getInt64', 'toHexString', 'toByteString',
 			 'updateByByteArray', 'updateByByteString', 'updateByNumberArray'];
 		log(fields);
 		log(SHA512JS);
@@ -32,6 +32,41 @@ var SHA512JSTester = new function() {
 		return Int64 === SHA512JS.getInt64();
 	});
 	
+	
+	// toHexString
+	// -----------------------------------------------
+	T.makeTest('toHexString', false, [], function() {
+		var a = '6a09e667f3bcc908bb67ae8584caa73b3c6ef372fe94f82ba54ff53a5f1d36f1510e527fade682d19b05688c2b3e6c1f1f83d9abfb41bd6b5be0cd19137e2179';
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		var s = SHA512JS.toHexString(cnt);
+		log(a);
+		log(s);
+		return T.check(a === s);
+	});
+	
+	
+	// toByteString
+	// -----------------------------------------------
+	T.makeTest('toByteString', false, [], function() {
+		var a = [
+			0x6a, 0x09, 0xe6, 0x67, 0xf3, 0xbc, 0xc9, 0x08, 0xbb, 0x67, 0xae, 0x85, 0x84, 0xca, 0xa7, 0x3b,
+			0x3c, 0x6e, 0xf3, 0x72, 0xfe, 0x94, 0xf8, 0x2b, 0xa5, 0x4f, 0xf5, 0x3a, 0x5f, 0x1d, 0x36, 0xf1,
+			0x51, 0x0e, 0x52, 0x7f, 0xad, 0xe6, 0x82, 0xd1, 0x9b, 0x05, 0x68, 0x8c, 0x2b, 0x3e, 0x6c, 0x1f,
+			0x1f, 0x83, 0xd9, 0xab, 0xfb, 0x41, 0xbd, 0x6b, 0x5b, 0xe0, 0xcd, 0x19, 0x13, 0x7e, 0x21, 0x79
+		];
+		var i, bs = '';
+		for (i = 0; i < a.length; i++) {
+			bs += String.fromCharCode(a[i]);
+		}
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		var s = SHA512JS.toByteString(cnt);
+		log(bs);
+		log(s);
+		return T.checkA(bs, s);
+		
+	});
 	
 	// sample1 hash
 	// -----------------------------------------------
