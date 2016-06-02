@@ -79,7 +79,7 @@ function TesterUtilJS(__tester, __tester_name) {
 		if (_skip_flag) {
 			_setLogging(false);
 		}
-		_log(_withBar('MUST DO TESTS'));
+		_log(_withBar('MUST DO TESTS ( ' + __tester_name + ' )'));
 		for (i in _must_do_list) {
 			func = __tester[_funcName(_must_do_list[i])];
 			if (func(false) === false) {
@@ -91,7 +91,7 @@ function TesterUtilJS(__tester, __tester_name) {
 				throw 'failure reuired test! "' + _must_do_list[i] + '"';
 			}
 		}
-		_log(_withBar('MUST DO TESTS OK'));
+		_log(_withBar('MUST DO TESTS ( ' + __tester_name + ' ) OK'));
 		_setLogging(bk);
 	};
 	
@@ -134,10 +134,10 @@ function TesterUtilJS(__tester, __tester_name) {
 			_require(test_req);
 			var r, bk = _logging_flag;
 			_setLogging(s !== false);
-			_log(_withBar('TEST ' + test_name));
+			_log(_withBar('TEST ( ' + __tester_name + ' ) ' + test_name));
 			r = test_func();
 			_setLogging(bk);
-			_log(_withBar('TEST ' + test_name + ' ' + (r ? 'OK' : 'NG')));
+			_log(_withBar('TEST ( ' + __tester_name + ' ) ' + test_name + ' ' + (r ? 'OK' : 'NG')));
 			_self[flag_name] = r;
 			return r;
 		};
@@ -148,7 +148,7 @@ function TesterUtilJS(__tester, __tester_name) {
 	
 	var _testAll = function(s, ls) {
 		_testMustDo();
-		_log(_withBar('TEST ALL'));
+		_log(_withBar('TEST ALL ( ' + __tester_name + ' )'));
 		var i, b = true, func;
 		var tg = (ls === undefined || ls.length === 0) ? _test_list : ls;
 		var ok = [], ng = [];
@@ -161,7 +161,7 @@ function TesterUtilJS(__tester, __tester_name) {
 				ng.push(tg[i]);
 			}
 		}
-		_log(_withBar('TEST ALL ' + (b ? 'OK' : 'NG')));
+		_log(_withBar('TEST ALL ( ' + __tester_name + ' ) ' + (b ? 'OK' : 'NG')));
 		_log('OK TESTS:');
 		_log(ok);
 		if (b === false) {
@@ -285,7 +285,7 @@ function TesterUtilJS(__tester, __tester_name) {
 	};
 	
 	var _bind = function(x) {
-		_log(_withBar('BIND ' + __tester_name));
+		_log(_withBar('BIND ( ' + __tester_name + ' )'));
 		_log(x);
 		_bindfunc(x);
 	};
