@@ -91,7 +91,7 @@ var SHA512JSTester = new function() {
 		return T.checkA(_first_hash, hash);
 	});
 	
-	// getHashToNumberArray 16bit
+	// getHashToNumberArray 16bit (big endian)
 	// -----------------------------------------------
 	T.makeTest('getHashToNumberArray_16bit', false, [], function() {
 		var a = [
@@ -109,7 +109,7 @@ var SHA512JSTester = new function() {
 		return T.checkA(a, hash);
 	});
 	
-	// getHashToNumberArray 32bit
+	// getHashToNumberArray 32bit (big endian)
 	// -----------------------------------------------
 	T.makeTest('getHashToNumberArray_32bit', false, [], function() {
 		var a = [
@@ -120,6 +120,40 @@ var SHA512JSTester = new function() {
 		SHA512JS.init(cnt);
 		var hash = new Array(16);
 		SHA512JS.getHashToNumberArray(cnt, 32, hash, 0);
+		log(a);
+		log(hash);
+		return T.checkA(a, hash);
+	});
+	
+	// getHashToNumberArrayLE 16bit (little endian)
+	// -----------------------------------------------
+	T.makeTest('getHashToNumberArrayLE_16bit', false, [], function() {
+		var a = [
+			0x096a, 0x67e6, 0xbcf3, 0x08c9, 0x67bb, 0x85ae, 0xca84, 0x3ba7,
+			0x6e3c, 0x72f3, 0x94fe, 0x2bf8, 0x4fa5, 0x3af5, 0x1d5f, 0xf136,
+			0x0e51, 0x7f52, 0xe6ad, 0xd182, 0x059b, 0x8c68, 0x3e2b, 0x1f6c,
+			0x831f, 0xabd9, 0x41fb, 0x6bbd, 0xe05b, 0x19cd, 0x7e13, 0x7921
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		var hash = new Array(32);
+		SHA512JS.getHashToNumberArrayLE(cnt, 16, hash, 0);
+		log(a);
+		log(hash);
+		return T.checkA(a, hash);
+	});
+	
+	// getHashToNumberArrayLE 32bit (little endian)
+	// -----------------------------------------------
+	T.makeTest('getHashToNumberArrayLE_32bit', false, [], function() {
+		var a = [
+			0x67e6096a, 0x08c9bcf3, 0x85ae67bb, 0x3ba7ca84, 0x72f36e3c, 0x2bf894fe, 0x3af54fa5, 0xf1361d5f,
+			0x7f520e51, 0xd182e6ad, 0x8c68059b, 0x1f6c3e2b, 0xabd9831f, 0x6bbd41fb, 0x19cde05b, 0x79217e13
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		var hash = new Array(16);
+		SHA512JS.getHashToNumberArrayLE(cnt, 32, hash, 0);
 		log(a);
 		log(hash);
 		return T.checkA(a, hash);

@@ -286,13 +286,28 @@ SHA512JS.getHashToNumberArray(cnt, bits, numarray, offset)
 -----------------------------------------------------------
 	cnt      : container
 	bits     : integer bits (16 or 32)
-	numarray : integer array to copy to hash
+	numarray : integer array to copy to hash (pack Big Endian)
 	offset   : array index offset
 	
 	return : undefined (nothing)
 	
-	copy SHA512 hash data(64bytes) to integer array (16bit or 32bit)
+	copy SHA512 hash data(64bytes) to integer array (16bit or 32bit) (pack big endian)
 	be careful, argument bits position is difference position of updateByNumberArray
+
+
+
+
+SHA512JS.getHashToNumberArrayLE(cnt, bits, numarray, offset)
+-----------------------------------------------------------
+	cnt      : container
+	bits     : integer bits (16 or 32)
+	numarray : integer array to copy to hash (pack Little Endian)
+	offset   : array index offset
+	
+	return : undefined (nothing)
+	
+	copy SHA512 hash data(64bytes) to integer array (16bit or 32bit) (pack little endian)
+	be careful, argument bits position is difference position of updateByNumberArrayLE
 
 
 

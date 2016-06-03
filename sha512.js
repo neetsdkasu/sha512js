@@ -569,13 +569,29 @@ var SHA512JS = new function() {
 		}
 	};
 	
-	this.getHashToNumberArray = function(x, bits, dest, offset) {
+	this.getHashToNumberArray = function(x, bits, dest, offset) { // pack Big Endian
 		// bits: 16 or 32
 		var i, b, j, p = offset, s = bits >> 2;
 		for (i = 0; i < 8; i++) {
 			b = Int64.toHex(x.hash[i]);
 			for (j = 0; j < 16; j += s) {
 				dest[p] = parseInt(b.substring(j, j + s), 16);
+				p++;
+			}
+		}
+	};
+	
+	this.getHashToNumberArrayLE = function(x, bits, dest, offset) { // pack Little Endian
+		// bits: 16 or 32
+		var i, b, j, p = offset, s = bits >> 2, k, u;
+		for (i = 0; i < 8; i++) {
+			b = Int64.toHex(x.hash[i]);
+			for (j = 0; j < 16; j += s) {
+				u = '';
+				for (k = 0; k < s; k += 2) {
+					u = b.substring(j + k, j + k + 2) + u;
+				}
+				dest[p] = parseInt(u, 16);
 				p++;
 			}
 		}
