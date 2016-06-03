@@ -588,7 +588,8 @@ var SHA512JS = new function() {
 	}
 	if (typeof SHA512JSTester !== 'undefined') {
 		SHA512JSTester.bind({
-			"Int64": Int64
+			"Int64": Int64,
+			"_init_hash_value": _init_hash_value
 		});
 	}
 }

@@ -10,10 +10,11 @@ var SHA512JSTester = new function() {
 	var T = new TesterUtilJS(this, 'SHA512JSTester');
 	var log = T.log;
 	
-	var Int64;
+	var Int64, _init_hash_value;
 	
 	T.setBindFunc(function(x) {
 		Int64 = x['Int64'];
+		_init_hash_value = x['_init_hash_value'];
 	});
 	
 	// fields
@@ -31,6 +32,45 @@ var SHA512JSTester = new function() {
 	T.makeTest('getInt64', false, [], function() {
 		return Int64 === SHA512JS.getInt64();
 	});
+	
+	
+	// init
+	// -----------------------------------------------
+	T.makeTest('init', false, [], function() {
+		var x = {
+			"hash": [],
+			"packer": Int64.getPacker().create()
+		};
+		SHA512JS.init(x);
+		log('check hash property length 8?');
+		log(x.hash.length);
+		if (T.check(x.hash.length === 8) === 0) {
+			return false;
+		}
+		log('check hash property values');
+		log(_init_hash_value);
+		log(x.hash);
+		if (T.checkA(_init_hash_value, x.hash) === 0) {
+			return false;
+		}
+		log('check size property 0?');
+		log(x.size);
+		if (T.check(x.size === 0) === 0) {
+			return false;
+		}
+		log('check packer property initialized (field-v)');
+		log(x.packer.v);
+		if (T.checkA([0, 0, 0, 0], x.packer.v) === 0) {
+			return false;
+		}
+		log('check packer property initialized (field-p 8?)');
+		log(x.packer.p);
+		if (T.check(x.packer.p === 8) === 0) {
+			return false;
+		}
+		return true;
+	});
+	
 	
 	var _first_hash = [
 		0x6a, 0x09, 0xe6, 0x67, 0xf3, 0xbc, 0xc9, 0x08, 0xbb, 0x67, 0xae, 0x85, 0x84, 0xca, 0xa7, 0x3b,
