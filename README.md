@@ -58,7 +58,7 @@ NumberArray(16) [ 0x62, 0x64 ] == ByteArray [ 0x00, 0x62, 0x00, 0x64 ].
 <script type="text/javascript" src="sha512.js"></script>
 <script type="text/javascript">
 	
-	var data = [ 0x6162, 0x6364 ]; // Array of 16bit Integers
+	var data = [ 0x6162, 0x6364 ]; // Array of 16bit Integers (as Big Endian)
 	
 	var cnt = SHA512JS.create();
 	
@@ -84,13 +84,66 @@ NumberArray(32) [ 0x626364 ] == ByteArray [ 0x00, 0x62, 0x63, 0x64 ].
 <script type="text/javascript" src="sha512.js"></script>
 <script type="text/javascript">
 	
-	var data = [ 0x61626364 ]; // Array of 32bit Integers
+	var data = [ 0x61626364 ]; // Array of 32bit Integers (as Big Endian)
 	
 	var cnt = SHA512JS.create();
 	
 	SHA512JS.init(cnt);
 	
 	SHA512JS.updateByNumberArray(cnt, data, 0, data.length, 32);
+	
+	SHA512JS.finish(cnt);
+	
+	var hash = SHA512JS.toHexString(cnt); // d8022f2060ad6efd297ab73dcc5355c9b214054b0d1776a136a669d26a7d3b14f73aa0d0ebff19ee333368f0164b6419a96da49e3e481753e7e96b716bdccb6f
+	
+</script>
+```
+
+
+###Example5
+Be careful   
+NumberArrayLE(16) [ 0x6261, 0x6463 ] == ByteArray [ 0x61, 0x62, 0x63, 0x64 ].  
+NumberArrayLE(16) [ 0x6200, 0x6400 ] == ByteArray [ 0x00, 0x62, 0x00, 0x64 ].  
+NumberArrayLE(16) [ 0x61, 0x63 ] == ByteArray [ 0x61, 0x00, 0x63, 0x00 ].  
+
+
+```html
+<script type="text/javascript" src="sha512.js"></script>
+<script type="text/javascript">
+	
+	var data = [ 0x6261, 0x6463 ]; // Array of 16bit Integers (as Little Endian)
+	
+	var cnt = SHA512JS.create();
+	
+	SHA512JS.init(cnt);
+	
+	SHA512JS.updateByNumberArrayLE(cnt, data, 0, data.length, 16);
+	
+	SHA512JS.finish(cnt);
+	
+	var hash = SHA512JS.toHexString(cnt); // d8022f2060ad6efd297ab73dcc5355c9b214054b0d1776a136a669d26a7d3b14f73aa0d0ebff19ee333368f0164b6419a96da49e3e481753e7e96b716bdccb6f
+	
+</script>
+```
+
+
+###Example6
+Be careful   
+NumberArrayLE(32) [ 0x64636261 ] == ByteArray [ 0x61, 0x62, 0x63, 0x64 ].  
+NumberArrayLE(32) [ 0x64636200 ] == ByteArray [ 0x00, 0x62, 0x63, 0x64 ].  
+NumberArrayLE(32) [ 0x636261 ] == ByteArray [ 0x61, 0x62, 0x63, 0x00 ].  
+
+```html
+<script type="text/javascript" src="sha512.js"></script>
+<script type="text/javascript">
+	
+	var data = [ 0x64636261 ]; // Array of 32bit Integers (as Little Endian)
+	
+	var cnt = SHA512JS.create();
+	
+	SHA512JS.init(cnt);
+	
+	SHA512JS.updateByNumberArrayLE(cnt, data, 0, data.length, 32);
 	
 	SHA512JS.finish(cnt);
 	
@@ -155,14 +208,29 @@ SHA512JS.updateByByteString(cnt, string, offset, length)
 SHA512JS.updateByNumberArray(cnt, numarray, offset, length, bits)
 -----------------------------------------------------------	
 	cnt      : container
-	numarray : integer array (16bit integer or 32bit integer)
+	numarray : integer array (16bit integer or 32bit integer) *as Big Endian
 	offset   : array index offset
 	length   : using array data count
 	bits     : integer bits (16 or 32)
 	
 	return : undefined (nothing)
 	
-	calculate SHA512 hash by integer array
+	calculate SHA512 hash by integer array as big endian
+
+
+
+
+SHA512JS.updateByNumberArrayLE(cnt, numarray, offset, length, bits)
+-----------------------------------------------------------	
+	cnt      : container
+	numarray : integer array (16bit integer or 32bit integer) *as Little Endian
+	offset   : array index offset
+	length   : using array data count
+	bits     : integer bits (16 or 32)
+	
+	return : undefined (nothing)
+	
+	calculate SHA512 hash by integer array as little endian
 
 
 

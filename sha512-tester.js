@@ -309,6 +309,27 @@ var SHA512JSTester = new function() {
 		return T.checkA(_sample2_hash, hash);
 	});
 	
+	// sample2 auto by NumberArrayLE
+	// -----------------------------------------------
+	T.makeTest('sample2_NumberArrayLE', false, [], function() {
+		var numbers = [
+			0x64636261, 0x68676665, 0x65646362, 0x69686766, 0x66656463, 0x6a696867, 0x67666564, 0x6b6a6968,
+			0x68676665, 0x6c6b6a69, 0x69686766, 0x6d6c6b6a, 0x6a696867, 0x6e6d6c6b, 0x6b6a6968, 0x6f6e6d6c,
+			0x6c6b6a69, 0x706f6e6d, 0x6d6c6b6a, 0x71706f6e, 0x6e6d6c6b, 0x7271706f, 0x6f6e6d6c, 0x73727170,
+			0x706f6e6d, 0x74737271, 0x71706f6e, 0x75747372
+		];
+		var cnt = SHA512JS.create();
+		SHA512JS.init(cnt);
+		SHA512JS.updateByNumberArrayLE(cnt, numbers, 0, numbers.length, 32);
+		SHA512JS.finish(cnt);
+		var hash = new Array(64);
+		SHA512JS.getHash(cnt, hash, 0);
+		log(numbers);
+		log(_sample2_hash);
+		log(hash);
+		return T.checkA(_sample2_hash, hash);
+	});
+	
 	// hash test
 	// -----------------------------------------------
 	T.makeTest('hash_test', false, [], function() {

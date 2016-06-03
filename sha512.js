@@ -415,7 +415,8 @@ var SHA512JS = new function() {
 			"packer": Packer.create(),
 			"b_iter": EMPTYITER,
 			"s_iter": EMPTYITER,
-			"n_iter": EMPTYITER
+			"n_iter": EMPTYITER,
+			"l_iter": EMPTYITER
 		};
 		__init_hash(x);
 		return x;
@@ -520,6 +521,14 @@ var SHA512JS = new function() {
 		}
 		x.n_iter.init(data, offset, len, bits);
 		__update(x, x.n_iter);
+	};
+	
+	this.updateByNumberArrayLE = function(x, data, offset, len, bits) {
+		if (x.l_iter === EMPTYITER) {
+			x.l_iter = new NumberArrayByteIteratorLE();
+		}
+		x.l_iter.init(data, offset, len, bits);
+		__update(x, x.l_iter);
 	};
 	
 	this.finish = function(x) {
