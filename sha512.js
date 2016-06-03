@@ -271,7 +271,7 @@ var SHA512JS = new function() {
 		};
 	}
 	
-	function NumberArrayByteIterator() { // 32bits number
+	function NumberArrayByteIterator() { // 32bits number (Big Endian)
 		var _arr = [];
 		var _idx = 0;
 		var _iend = 0;
@@ -282,6 +282,27 @@ var SHA512JS = new function() {
 		this.hasNext = function() { return _idx < _iend; };
 		this.next = function() {
 			_i = (_mask - (_idx & _mask)) << 3;
+			return (_arr[(_idx++) >> _shift] >> _i) & 0xFF;
+		};
+		this.size = function() { return _size; }
+		this.init = function(data, offset, len, bits) {
+			// bits: Integer bits (16 or 32) (javascript's shift operators support only 32bits number)
+			_mask = (bits >> 3) - 1; _shift = bits >> 4;
+			_arr = data; _idx = offset << _shift; _iend = (offset + len) << _shift; _size = len * (bits >> 3);
+		};
+	}
+	
+	function NumberArrayByteIteratorLE() { // 32bits number (Little Endian)
+		var _arr = [];
+		var _idx = 0;
+		var _iend = 0;
+		var _size = 0;
+		var _mask = 0;
+		var _shift = 0;
+		var _i;
+		this.hasNext = function() { return _idx < _iend; };
+		this.next = function() {
+			_i = (_idx & _mask) << 3;
 			return (_arr[(_idx++) >> _shift] >> _i) & 0xFF;
 		};
 		this.size = function() { return _size; }
@@ -583,7 +604,8 @@ var SHA512JS = new function() {
 			"EMPTYITER": EMPTYITER,
 			"ByteArrayByteIterator": ByteArrayByteIterator,
 			"ByteStringByteIterator": ByteStringByteIterator,
-			"NumberArrayByteIterator": NumberArrayByteIterator
+			"NumberArrayByteIterator": NumberArrayByteIterator,
+			"NumberArrayByteIteratorLE": NumberArrayByteIteratorLE
 		});
 	}
 	if (typeof SHA512JSTester !== 'undefined') {
