@@ -271,7 +271,7 @@ var SHA512JS = new function() {
 		};
 	}
 	
-	function NumberArrayByteIterator() { // 32bits number
+	function NumberArrayByteIterator() { // 32bits number (Big Endian)
 		var _arr = [];
 		var _idx = 0;
 		var _iend = 0;
@@ -282,6 +282,27 @@ var SHA512JS = new function() {
 		this.hasNext = function() { return _idx < _iend; };
 		this.next = function() {
 			_i = (_mask - (_idx & _mask)) << 3;
+			return (_arr[(_idx++) >> _shift] >> _i) & 0xFF;
+		};
+		this.size = function() { return _size; }
+		this.init = function(data, offset, len, bits) {
+			// bits: Integer bits (16 or 32) (javascript's shift operators support only 32bits number)
+			_mask = (bits >> 3) - 1; _shift = bits >> 4;
+			_arr = data; _idx = offset << _shift; _iend = (offset + len) << _shift; _size = len * (bits >> 3);
+		};
+	}
+	
+	function NumberArrayByteIteratorLE() { // 32bits number (Little Endian)
+		var _arr = [];
+		var _idx = 0;
+		var _iend = 0;
+		var _size = 0;
+		var _mask = 0;
+		var _shift = 0;
+		var _i;
+		this.hasNext = function() { return _idx < _iend; };
+		this.next = function() {
+			_i = (_idx & _mask) << 3;
 			return (_arr[(_idx++) >> _shift] >> _i) & 0xFF;
 		};
 		this.size = function() { return _size; }
@@ -394,7 +415,8 @@ var SHA512JS = new function() {
 			"packer": Packer.create(),
 			"b_iter": EMPTYITER,
 			"s_iter": EMPTYITER,
-			"n_iter": EMPTYITER
+			"n_iter": EMPTYITER,
+			"l_iter": EMPTYITER
 		};
 		__init_hash(x);
 		return x;
@@ -501,6 +523,14 @@ var SHA512JS = new function() {
 		__update(x, x.n_iter);
 	};
 	
+	this.updateByNumberArrayLE = function(x, data, offset, len, bits) {
+		if (x.l_iter === EMPTYITER) {
+			x.l_iter = new NumberArrayByteIteratorLE();
+		}
+		x.l_iter.init(data, offset, len, bits);
+		__update(x, x.l_iter);
+	};
+	
 	this.finish = function(x) {
 		var p = x.size & 1023;
 		Packer.push(x.packer, 0x80); // end of message
@@ -539,13 +569,29 @@ var SHA512JS = new function() {
 		}
 	};
 	
-	this.getHashToNumberArray = function(x, bits, dest, offset) {
+	this.getHashToNumberArray = function(x, bits, dest, offset) { // pack Big Endian
 		// bits: 16 or 32
 		var i, b, j, p = offset, s = bits >> 2;
 		for (i = 0; i < 8; i++) {
 			b = Int64.toHex(x.hash[i]);
 			for (j = 0; j < 16; j += s) {
 				dest[p] = parseInt(b.substring(j, j + s), 16);
+				p++;
+			}
+		}
+	};
+	
+	this.getHashToNumberArrayLE = function(x, bits, dest, offset) { // pack Little Endian
+		// bits: 16 or 32
+		var i, b, j, p = offset, s = bits >> 2, k, u;
+		for (i = 0; i < 8; i++) {
+			b = Int64.toHex(x.hash[i]);
+			for (j = 0; j < 16; j += s) {
+				u = '';
+				for (k = 0; k < s; k += 2) {
+					u = b.substring(j + k, j + k + 2) + u;
+				}
+				dest[p] = parseInt(u, 16);
 				p++;
 			}
 		}
@@ -583,12 +629,14 @@ var SHA512JS = new function() {
 			"EMPTYITER": EMPTYITER,
 			"ByteArrayByteIterator": ByteArrayByteIterator,
 			"ByteStringByteIterator": ByteStringByteIterator,
-			"NumberArrayByteIterator": NumberArrayByteIterator
+			"NumberArrayByteIterator": NumberArrayByteIterator,
+			"NumberArrayByteIteratorLE": NumberArrayByteIteratorLE
 		});
 	}
 	if (typeof SHA512JSTester !== 'undefined') {
 		SHA512JSTester.bind({
-			"Int64": Int64
+			"Int64": Int64,
+			"_init_hash_value": _init_hash_value
 		});
 	}
 }
