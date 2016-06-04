@@ -81,49 +81,35 @@
 
 <pre>
 &lt;?xml version="1.0"?&gt;
-&lt;job id="calcSHA512"&gt;
-    &lt;runtime&gt;
-        &lt;named name="?" helpstring="show help" type="simple" require="false" /&gt;
-        &lt;named name="out" helpstring="output file path" type="string" require="false" /&gt;
-        &lt;unnamed name="in" helpstring="input file path" many="false" require="false" /&gt;
-    &lt;/runtime&gt;
-    &lt;object id="fso" progid="Scripting.FileSystemObject" /&gt;
-    &lt;script language="JScript" src="sha512.js" /&gt;
-    &lt;script language="JScript"&gt;
-        &lt;![CDATA[
-            if (WScript.Arguments.Named.Exists('?')) {
-                WScript.Arguments.ShowUsage();
-                WScript.Quit();
-            }
-            function calc(fin, fout) {
-                var cnt = SHA512JS.create();
-                SHA512JS.init(cnt);
-                var str;
-                while (!fin.AtEndOfStream)
-                {
-                     str = fin.ReadAll();
-                     SHA512JS.updateByByteString(cnt, str, 0, str.length);
-                }
-                SHA512JS.finish(cnt);
-                fout.Write(SHA512JS.toHexString(cnt));
-            }
-            var fin = null, fout = null;
-            try {
-                if (WScript.Arguments.Unnamed.Length &gt; 0) {
-                    fin = fso.OpenTextFile(WScript.Arguments.Unnamed.Item(0), 1);
-                }
-                if (WScript.Arguments.Named.Exists('out')) {
-                    fout = fso.CreateTextFile(WScript.Arguments.Named.Item('out'), true);
-                }
-                calc((fin === null ? WScript.StdIn : fin), (fout === null ? WScript.StdOut : fout));
-            } catch (e) {
-                WScript.StdErr.WriteLine('Error! failed.');
-            } finally {
-                if (fin !== null) { fin.Close(); }
-                if (fout !== null) { fout.Close(); }
-            }
-        ]]&gt;
-    &lt;/script&gt;
+&lt;job id="sampleSHA512"&gt;
+	&lt;script language="JScript" src="sha512.js" /&gt;
+	&lt;script language="JScript"&gt;
+		&lt;![CDATA[
+			function testJS() {
+				var cnt = SHA512JS.create();
+				SHA512JS.init(cnt);
+				SHA512JS.updateByByteString(cnt, 'abc', 0, 3);
+				SHA512JS.finish(cnt);
+				var hash = SHA512JS.toHexString(cnt);
+				WScript.Echo('JScript:\n' + hash);
+			}
+			testJS();
+		]]&gt;
+	&lt;/script&gt;
+	&lt;script language="VBScript"&gt;
+		&lt;![CDATA[
+			Sub testVBS()
+				Dim cnt, hash
+				Set cnt = SHA512JS.create()
+				SHA512JS.init cnt
+				SHA512JS.updateByByteString cnt, "abc", 0, 3
+				SHA512JS.finish cnt
+				hash = SHA512JS.toHexString(cnt)
+				WScript.Echo "VBScript:" &amp; vbNewLine &amp; hash
+			End Sub
+			Call testVBS
+		]]&gt;
+	&lt;/script&gt;
 &lt;/job&gt;
 </pre>
 		<hr />
