@@ -10,19 +10,32 @@
 		
 		<div>version1.2.0</div>
 		
-		<div>last update: Jun 4 2016</div>
+		<div>last update: Jun 5 2016</div>
 		<hr />
 		
 		<p>
 			<b>PLATFORM</b>
 			<br />
-			Web Brwoser (JavaScript)
+			Web Brwoser (HTML: JavaScript)<br />
+			WSH (Windows Script Host: JScript)<br />
+			Node.js
 		</p>
 		
 		<div><b>Description:</b></div>
 		<div>Calculate SHA512</div>
 		<br />
 		
+		<div><b>Develop Environment:</b></div>
+		<div>Windows7 Starter SP1</div>
+		<div>
+			<div>Test Browswer (success running)</div>
+			<ul>
+				<li>Internet Explorer 11</li>
+				<li>FireFox 46</li>
+				<li>Opera 37</li>
+				<li>Opera 12</li>
+			</ul>
+		</div>
 		<hr />
 		
 		<div><b>Source Files</b></div>
@@ -43,7 +56,8 @@
 		
 		<br />
 		
-		<b>Example:</b>
+		<div><b>Example1: Web Browser (html)</b></div>
+
 <pre>
 &lt;script type="text/javascript" src="sha512.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript"&gt;
@@ -62,7 +76,56 @@
 	
 &lt;/script&gt;
 </pre>
-		
+		<hr />
+		<div><b>Example2: WSH (Windows Script Host)</b></div>
+
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;job id="calcSHA512"&gt;
+    &lt;runtime&gt;
+        &lt;named name="?" helpstring="show help" type="simple" require="false" /&gt;
+        &lt;named name="out" helpstring="output file path" type="string" require="false" /&gt;
+        &lt;unnamed name="in" helpstring="input file path" many="false" require="false" /&gt;
+    &lt;/runtime&gt;
+    &lt;object id="fso" progid="Scripting.FileSystemObject" /&gt;
+    &lt;script language="JScript" src="sha512.js" /&gt;
+    &lt;script language="JScript"&gt;
+        &lt;![CDATA[
+            if (WScript.Arguments.Named.Exists('?')) {
+                WScript.Arguments.ShowUsage();
+                WScript.Quit();
+            }
+            function calc(fin, fout) {
+                var cnt = SHA512JS.create();
+                SHA512JS.init(cnt);
+                var str;
+                while (!fin.AtEndOfStream)
+                {
+                     str = fin.ReadAll();
+                     SHA512JS.updateByByteString(cnt, str, 0, str.length);
+                }
+                SHA512JS.finish(cnt);
+                fout.Write(SHA512JS.toHexString(cnt));
+            }
+            var fin = null, fout = null;
+            try {
+                if (WScript.Arguments.Unnamed.Length &gt; 0) {
+                    fin = fso.OpenTextFile(WScript.Arguments.Unnamed.Item(0), 1);
+                }
+                if (WScript.Arguments.Named.Exists('out')) {
+                    fout = fso.CreateTextFile(WScript.Arguments.Named.Item('out'), true);
+                }
+                calc((fin === null ? WScript.StdIn : fin), (fout === null ? WScript.StdOut : fout));
+            } catch (e) {
+                WScript.StdErr.WriteLine('Error! failed.');
+            } finally {
+                if (fin !== null) { fin.Close(); }
+                if (fout !== null) { fout.Close(); }
+            }
+        ]]&gt;
+    &lt;/script&gt;
+&lt;/job&gt;
+</pre>
 		<hr />
 		
 		<h4>LICENSE</h4>
