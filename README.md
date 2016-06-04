@@ -208,7 +208,7 @@ Windows Command Prompt
 
 ###Example8
 Windows Command Prompt  
-`cscript //nologo calcSHA512.wsf`  
+`cscript //nologo calcSHA512.wsf [/?] [/out:value] [in]`  
 
 ```xml
 <?xml version="1.0"?>
