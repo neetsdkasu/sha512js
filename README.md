@@ -171,7 +171,7 @@ Windows Command Prompt
 `wscript.exe //nologo sampleSHA512.wsf` (WScript.Echo ... GUI MessageBox)  
 `cscript.exe //nologo sampleSHA512.wsf` (WScript.Echo ... CUI StandardOut)  
 
-```WSH
+```xml
 <?xml version="1.0"?>
 <job id="sampleSHA512">
 	<script language="JScript" src="sha512.js" />
@@ -210,7 +210,7 @@ Windows Command Prompt
 Windows Command Prompt  
 `cscript //nologo calcSHA512.wsf`  
 
-```WSH
+```xml
 <?xml version="1.0"?>
 <job id="calcSHA512">
 	<runtime>
