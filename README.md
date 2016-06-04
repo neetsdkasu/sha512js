@@ -1,6 +1,19 @@
 SHA512 for JavaScript
 =====================
 
+Target: WebBrowser, WSH, Node.js, etc...   
+
+
+###Develop Environment
+Windows7 Starter SP1  
+  
+Test Browsers (Success Running)  
+ + Internet Explorer 11  
+ + FireFox 46  
+ + Opera 37  
+ + Opera 12  
+
+
 
 ###Example1
 
@@ -150,6 +163,99 @@ NumberArrayLE(32) [ 0x636261 ] == ByteArray [ 0x61, 0x62, 0x63, 0x00 ].
 	var hash = SHA512JS.toHexString(cnt); // d8022f2060ad6efd297ab73dcc5355c9b214054b0d1776a136a669d26a7d3b14f73aa0d0ebff19ee333368f0164b6419a96da49e3e481753e7e96b716bdccb6f
 	
 </script>
+```
+
+
+###Example7
+Windows Command Prompt  
+`wscript.exe //nologo sampleSHA512.wsf` (WScript.Echo ... GUI MessageBox)  
+`cscript.exe //nologo sampleSHA512.wsf` (WScript.Echo ... CUI StandardOut)  
+
+```WSH
+<?xml version="1.0"?>
+<job id="sampleSHA512">
+	<script language="JScript" src="sha512.js" />
+	<script language="JScript">
+		<![CDATA[
+			function testJS() {
+				var cnt = SHA512JS.create();
+				SHA512JS.init(cnt);
+				SHA512JS.updateByByteString(cnt, 'abc', 0, 3);
+				SHA512JS.finish(cnt);
+				var hash = SHA512JS.toHexString(cnt);
+				WScript.Echo('JScript:\n' + hash);
+			}
+			testJS();
+		]]>
+	</script>
+	<script language="VBScript">
+		<![CDATA[
+			Sub testVBS()
+				Dim cnt, hash
+				Set cnt = SHA512JS.create()
+				SHA512JS.init cnt
+				SHA512JS.updateByByteString cnt, "abc", 0, 3
+				SHA512JS.finish cnt
+				hash = SHA512JS.toHexString(cnt)
+				WScript.Echo "VBScript:" & vbNewLine & hash
+			End Sub
+			Call testVBS
+		]]>
+	</script>
+</job>
+```
+
+
+###Example8
+Windows Command Prompt  
+`cscript //nologo calcSHA512.wsf`  
+
+```WSH
+<?xml version="1.0"?>
+<job id="calcSHA512">
+	<runtime>
+		<named name="?" helpstring="show help" type="simple" require="false" />
+		<named name="out" helpstring="output file path" type="string" require="false" />
+		<unnamed name="in" helpstring="input file path" many="false" require="false" />
+	</runtime>
+	<object id="fso" progid="Scripting.FileSystemObject" />
+	<script language="JScript" src="sha512.js" />
+	<script language="JScript">
+		<![CDATA[
+			if (WScript.Arguments.Named.Exists('?')) {
+				WScript.Arguments.ShowUsage();
+				WScript.Quit();
+			}
+			function calc(fin, fout) {
+				var cnt = SHA512JS.create();
+				SHA512JS.init(cnt);
+				var str;
+				while (!fin.AtEndOfStream)
+				{
+				     str = fin.ReadAll();
+				     SHA512JS.updateByByteString(cnt, str, 0, str.length);
+				}
+				SHA512JS.finish(cnt);
+				fout.Write(SHA512JS.toHexString(cnt));
+			}
+			var fin = null, fout = null;
+			try {
+				if (WScript.Arguments.Unnamed.Length > 0) {
+					fin = fso.OpenTextFile(WScript.Arguments.Unnamed.Item(0), 1);
+				}
+				if (WScript.Arguments.Named.Exists('out')) {
+					fout = fso.CreateTextFile(WScript.Arguments.Named.Item('out'), true);
+				}
+				calc((fin === null ? WScript.StdIn : fin), (fout === null ? WScript.StdOut : fout));
+			} catch (e) {
+				WScript.StdErr.WriteLine('Error! failed.');
+			} finally {
+				if (fin !== null) { fin.Close(); }
+				if (fout !== null) { fout.Close(); }
+			}
+		]]>
+	</script>
+</job>
 ```
 
 

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<job id="sampleSHA512">
+	<script language="JScript" src="sha512.js" />
+	<script language="JScript">
+		<![CDATA[
+			function testJS() {
+				var cnt = SHA512JS.create();
+				SHA512JS.init(cnt);
+				SHA512JS.updateByByteString(cnt, 'abc', 0, 3);
+				SHA512JS.finish(cnt);
+				var hash = SHA512JS.toHexString(cnt);
+				WScript.Echo('JScript:\n' + hash);
+			}
+			testJS();
+		]]>
+	</script>
+	<script language="VBScript">
+		<![CDATA[
+			Sub testVBS()
+				Dim cnt, hash
+				Set cnt = SHA512JS.create()
+				SHA512JS.init cnt
+				SHA512JS.updateByByteString cnt, "abc", 0, 3
+				SHA512JS.finish cnt
+				hash = SHA512JS.toHexString(cnt)
+				WScript.Echo "VBScript:" & vbNewLine & hash
+			End Sub
+			Call testVBS
+		]]>
+	</script>
+</job>

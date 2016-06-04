@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<job id="calcSHA512">
+	<runtime>
+		<named name="?" helpstring="show help" type="simple" require="false" />
+		<named name="out" helpstring="output file path" type="string" require="false" />
+		<unnamed name="in" helpstring="input file path" many="false" require="false" />
+	</runtime>
+	<object id="fso" progid="Scripting.FileSystemObject" />
+	<script language="JScript" src="sha512.js" />
+	<script language="JScript">
+		<![CDATA[
+			if (WScript.Arguments.Named.Exists('?')) {
+				WScript.Arguments.ShowUsage();
+				WScript.Quit();
+			}
+			function calc(fin, fout) {
+				var cnt = SHA512JS.create();
+				SHA512JS.init(cnt);
+				var str;
+				while (!fin.AtEndOfStream)
+				{
+				     str = fin.ReadAll();
+				     SHA512JS.updateByByteString(cnt, str, 0, str.length);
+				}
+				SHA512JS.finish(cnt);
+				fout.Write(SHA512JS.toHexString(cnt));
+			}
+			var fin = null, fout = null;
+			try {
+				if (WScript.Arguments.Unnamed.Length > 0) {
+					fin = fso.OpenTextFile(WScript.Arguments.Unnamed.Item(0), 1);
+				}
+				if (WScript.Arguments.Named.Exists('out')) {
+					fout = fso.CreateTextFile(WScript.Arguments.Named.Item('out'), true);
+				}
+				calc((fin === null ? WScript.StdIn : fin), (fout === null ? WScript.StdOut : fout));
+			} catch (e) {
+				WScript.StdErr.WriteLine('Error! failed.');
+			} finally {
+				if (fin !== null) { fin.Close(); }
+				if (fout !== null) { fout.Close(); }
+			}
+		]]>
+	</script>
+</job>
